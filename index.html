@@ -9,6 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style>
     :root {
         /* ธีมสีส้ม FWD */
@@ -141,7 +143,7 @@
     .error-msg { color: #d32f2f; font-size: 13px; margin-top: 10px; display: none; font-weight: 500; }
     .requirements { margin-top: 15px; border: 1px solid var(--border-color); border-radius: 12px; padding: 15px 20px; background-color: #fafafa; }
     .requirements h3 { font-size: 18px; display: flex; align-items: center; gap: 8px; color: var(--primary); margin: 0 0 12px 0; }
-    .req-list { list-style: none; padding: 0; margin: 0; font-size: 14px; color: var(--text-grey); }
+    .req-list { list-style: none; padding: 0; margin: 0; font-size: 13px; color: var(--text-grey); }
     .req-list li { margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; }
     .req-list i { margin-top: 4px; color: var(--line-green); }
 
@@ -257,6 +259,7 @@
         transition: 0.3s;
         max-width: 850px;
         margin: 0 auto;
+        overflow: hidden; 
     }
     .fs-toggle-btn {
         position: absolute;
@@ -278,6 +281,7 @@
         transition: 0.2s;
     }
     .fs-toggle-btn:hover { background: var(--primary); color: white; }
+    .fs-document-area { width: 100%; transition: 0.3s; }
 
     /* เมื่อกดขยายเต็มจอ */
     .ig-fullscreen-inner.is-fullscreen {
@@ -287,10 +291,11 @@
         max-width: none; max-height: none;
         border-radius: 0;
         z-index: 9999;
-        overflow: auto; /* เปิดให้เลื่อนอิสระ */
-        padding: 60px 20px 20px 20px; /* เว้นที่ให้ปุ่มปิดด้านบน */
+        overflow: auto; 
+        -webkit-overflow-scrolling: touch; 
+        padding: 60px 20px 20px 20px; 
     }
-    .ig-fullscreen-inner.is-fullscreen .fs-toggle-btn { top: 15px; left: 15px; }
+    .ig-fullscreen-inner.is-fullscreen .fs-toggle-btn { top: 15px; left: 15px; position: fixed; }
     .ig-fullscreen-inner.is-fullscreen .close-info-btn { top: 10px; right: 15px; position: fixed; }
 
     /* 1. Bar Chart Modal (Maturity 90/20) */
@@ -328,6 +333,13 @@
     .premium-period::before { left: 0; }
     .premium-period::after { right: 0; }
     .premium-period span { font-size: 11.5px; color: #3b8796; font-weight: bold; position: relative; top: -18px;}
+
+    .mobile-scrollable-chart {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 10px;
+    }
 
     /* Financial Summary Boxes */
     .fin-summary-row { display: flex; gap: 15px; }
@@ -367,6 +379,30 @@
 
     /* 3. Disease List Modal */
     .list-content { max-width: 1100px; max-height: 90vh; overflow-y: auto; font-family: 'Sarabun', sans-serif;}
+    
+    /* --- CSS ส่วนที่เพิ่มใหม่สำหรับการ Capture ให้อยู่ในรูปแบบ PC --- */
+    .dl-action-bar { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); }
+    .btn-capture { background: var(--line-green); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(6, 199, 85, 0.2); transition: 0.2s; display: inline-flex; align-items: center; gap: 8px;}
+    .btn-capture:hover { background: #05a044; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(6, 199, 85, 0.3);}
+    .btn-capture i { font-size: 18px; }
+
+    /* หุ้มพื้นที่สำหรับเลื่อนซ้ายขวาในมือถือ */
+    .capture-area-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: -30px; /* หักล้าง padding ของ .modal-content-custom */
+        padding: 30px;
+    }
+    
+    /* บังคับเนื้อหาด้านในให้เป็น PC Layout (กว้างขั้นต่ำ 1024px) */
+    .capture-area-inner {
+        min-width: 1024px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    /* สไตล์ดั้งเดิมของรายชื่อโรค */
     .dl-main-title { color: var(--brand-orange); font-size: 28px; font-weight: 700; margin: 0 0 15px 0; letter-spacing: 0.5px; }
     .dl-top-section { display: flex; align-items: stretch; gap: 20px; margin-bottom: 5px; }
     .dl-top-header { flex: 0 0 180px; }
@@ -386,6 +422,21 @@
     .dl-num { font-weight: 700; width: 22px; flex-shrink: 0; }
     a.dl-disease-link { color: var(--text-dark); text-decoration: none; cursor: pointer; transition: color 0.2s; }
     a.dl-disease-link:hover { color: var(--brand-orange); text-decoration: underline; }
+
+    /* Override Media Queries พิเศษ: บังคับให้โครงสร้างใน capture-area ไม่พังเมื่อจอเล็ก */
+    @media (max-width: 850px) {
+        .capture-area-inner .dl-bottom-section { grid-template-columns: repeat(3, 1fr) !important; }
+    }
+    @media (max-width: 768px) {
+        .capture-area-inner .dl-top-section { flex-direction: row !important; align-items: stretch !important; }
+        .capture-area-inner .dl-top-header { flex: 0 0 180px !important; padding-right: 0 !important; }
+        .capture-area-inner .dl-top-list { padding-right: 20px !important; }
+        .capture-area-inner .dl-top-image { order: 0 !important; flex: 0 0 320px !important; }
+    }
+    @media (max-width: 600px) {
+        .capture-area-inner .dl-bottom-section { grid-template-columns: repeat(3, 1fr) !important; }
+    }
+    /* ---------------------------------------------------- */
 
     /* 4. Disease Detail Modal */
     .detail-content { max-width: 500px; font-family: 'Angsana New', 'Sarabun', sans-serif; border-top: 5px solid var(--primary); }
@@ -409,17 +460,24 @@
     .sticky-price { font-size: 28px; font-weight: bold; color: var(--primary);}
     .sticky-btn { background: var(--line-green); color: white; padding: 12px 30px; border-radius: 8px; font-weight: 600; font-family: 'Prompt'; font-size: 16px; cursor: pointer; border: none;}
 
-    /* --- RESPONSIVE เฉพาะส่วน Modal ให้อ่านง่าย --- */
-    /* บังคับให้กราฟในโหมด Fullscreen บนมือถือมีความกว้างขั้นต่ำ เพื่อให้เลื่อนดูได้ ไม่โดนบีบ */
+    /* --- RESPONSIVE ให้อ่านง่าย --- */
     @media (max-width: 850px) {
-        .ig-fullscreen-inner.is-fullscreen .bar-chart-wrapper,
-        .ig-fullscreen-inner.is-fullscreen .ig-flowchart,
-        .ig-fullscreen-inner.is-fullscreen .fin-summary-row {
-            min-width: 800px; /* บังคับสัดส่วนให้เป็นแนวนอนเสมอเมื่อขยายเต็มจอ */
+        .ig-fullscreen-inner.is-fullscreen .fs-document-area {
+            min-width: 850px; 
+            padding-right: 20px;
+            padding-bottom: 20px;
         }
-        .ig-fullscreen-inner.is-fullscreen .fin-summary-row { flex-wrap: nowrap; } /* ห้ามปุ่มตกลงมา */
-        
-        .dl-bottom-section { grid-template-columns: 1fr 1fr; }
+        .ig-fullscreen-inner.is-fullscreen .mobile-scrollable-chart { overflow-x: visible; }
+        .ig-fullscreen-inner.is-fullscreen .fin-summary-row { flex-direction: row; flex-wrap: nowrap; } 
+        .ig-fullscreen-inner.is-fullscreen .ig-flowchart { flex-direction: row; align-items: stretch; gap: 0;}
+        .ig-fullscreen-inner.is-fullscreen .ig-divider-vertical { width: 1px; height: auto; border-top: none; border-left: 1px dashed #d68a27; margin: 0 10px;}
+        .ig-fullscreen-inner.is-fullscreen .ig-divider-text { padding: 10px 0; }
+        .ig-fullscreen-inner.is-fullscreen .ig-case-wrapper { flex-direction: row; align-items: flex-start; gap: 10px;}
+        .ig-fullscreen-inner.is-fullscreen .ig-case-label { margin-top: 35px; align-self: auto; }
+        .ig-fullscreen-inner.is-fullscreen .ig-arrow-box { margin-top: 25px; }
+        .ig-fullscreen-inner.is-fullscreen .ig-arrow-icon { transform: rotate(0deg); }
+        .ig-fullscreen-inner.is-fullscreen .ig-arrow-txt { display: block; }
+        .ig-fullscreen-inner.is-fullscreen .ig-equal-icon { margin-top: 30px; }
     }
 
     @media (max-width: 1024px) {
@@ -436,9 +494,10 @@
         .ig-arrow-txt { display: none; }
         .ig-equal-icon { margin-top: 0; }
         
-        .dl-top-section { flex-direction: column; align-items: stretch; }
-        .dl-top-header, .dl-top-list, .dl-top-image { flex: auto; padding-right: 0;}
-        .dl-top-image { order: -1; }
+        /* ให้กล่องด้านล่างพับในจอมือถือ (เวลาไม่ Fullscreen) */
+        .fin-summary-row { flex-direction: row; flex-wrap: wrap; gap: 10px;}
+        .fin-box { flex: 1 1 45%; } 
+        .fin-box.highlight { flex: 1 1 100%; }
     }
 
     @media (max-width: 600px) {
@@ -452,8 +511,6 @@
         .sticky-info h4 { font-size: 14px; }
         .sticky-price { font-size: 20px; }
         .sticky-btn { padding: 10px 15px; font-size: 14px; }
-
-        .dl-bottom-section { grid-template-columns: 1fr; }
     }
 </style>
 </head>
@@ -523,7 +580,7 @@
                 <div class="agent-info">
                     <h4>นฤมล คำใบ <span style="font-weight: 400; font-size:14px;">(ผู้จัดการขาย)</span></h4>
                     <p>ใบอนุญาตตัวแทน: 6901010926</p>
-                    <p style="color: var(--primary); white-space: nowrap;">ประสบการณ์ธุรกิจ <span id="experience-text"></span></p>
+                    <p style="color: var(--primary); white-space: nowrap; font-size: 11.5px;">ประสบการณ์ธุรกิจ <span id="experience-text"></span></p>
                     <a href="tel:0869017235" class="phone"><i class="fa fa-phone"></i> 086-901-7235</a>
                 </div>
                 <div class="agent-qr-container">
@@ -642,56 +699,58 @@
                 <i class="fa-solid fa-expand" id="matFsIcon"></i> <span id="matFsText">ดูเต็มจอ / เลื่อนดู</span>
             </div>
             
-            <h2 class="mat-title" style="margin-top:25px;">ผลประโยชน์และความคุ้มครองชีวิต</h2>
-            <p class="mat-subtitle">แผนความคุ้มครองชีวิต 90/20 (ชำระเบี้ย 20 ปี)</p>
+            <div class="fs-document-area">
+                <h2 class="mat-title" style="margin-top:25px;">ผลประโยชน์และความคุ้มครองชีวิต</h2>
+                <p class="mat-subtitle">แผนความคุ้มครองชีวิต 90/20 (ชำระเบี้ย 20 ปี)</p>
             
-                    <div class="bar-chart-wrapper">
-                <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 10px;">
-                <div style="display: flex; align-items: flex-end; min-width: 600px;">
+                <div class="bar-chart-wrapper">
+                    <div class="mobile-scrollable-chart">
+                        <div style="display: flex; align-items: flex-end; min-width: 650px;">
                                     <div class="y-axis-label">ความคุ้มครองชีวิต<br><span class="y-axis-sub">(% ทุนประกันภัย)</span></div>
                     
                                     <div style="flex: 1;">
-                        <div class="chart-bar-container">
-                            <div class="chart-bar">
-                                <div class="bar-txt-pct">100%</div>
-                                <div class="bar-txt-amt">คุ้มครอง <span id="mat-cov-val">200,000</span></div>
-                            </div>
-                        </div>
+                                        <div class="chart-bar-container">
+                                            <div class="chart-bar">
+                                                <div class="bar-txt-pct">100%</div>
+                                                <div class="bar-txt-amt">คุ้มครอง <span id="mat-cov-val">200,000</span></div>
+                                            </div>
+                                        </div>
                         
-                                            <div class="x-axis-line">
-                            <div class="x-node node-start">1</div>
-                            <div class="x-node node-mid">20</div>
-                            <div class="x-node node-end">90</div>
-                        </div>
-                        <div class="x-labels">
-                            <div class="x-lbl lbl-start">ปีกรมธรรม์</div>
-                            <div class="x-lbl lbl-mid">ชำระเบี้ยครบ</div>
-                            <div class="x-lbl lbl-end">อายุ 90 ปี<br>(ครบสัญญา)</div>
+                                        <div class="x-axis-line">
+                                            <div class="x-node node-start">1</div>
+                                            <div class="x-node node-mid">20</div>
+                                            <div class="x-node node-end">90</div>
+                                        </div>
+                                        <div class="x-labels">
+                                            <div class="x-lbl lbl-start">ปีกรมธรรม์</div>
+                                            <div class="x-lbl lbl-mid">ชำระเบี้ยครบ</div>
+                                            <div class="x-lbl lbl-end">อายุ 90 ปี<br>(ครบสัญญา)</div>
                             
-                            <div class="premium-period"><span>ระยะเวลาชำระเบี้ย 20 ปี</span></div>
-                        </div>
+                                            <div class="premium-period"><span>ระยะเวลาชำระเบี้ย 20 ปี</span></div>
+                                        </div>
+                                    </div>
+                                </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-            <div class="fin-summary-row">
-                <div class="fin-box">
-                    <div class="fin-label"><i class="fa-solid fa-coins"></i> จำนวนเบี้ยสัญญาหลัก ปีละ</div>
-                    <div class="fin-val" id="mat-annual-premium">-</div>
+                <div class="fin-summary-row">
+                    <div class="fin-box">
+                        <div class="fin-label"><i class="fa-solid fa-coins"></i> จำนวนเบี้ยสัญญาหลัก ปีละ</div>
+                        <div class="fin-val" id="mat-annual-premium">-</div>
+                    </div>
+                    <div class="fin-box">
+                        <div class="fin-label"><i class="fa-solid fa-sack-dollar"></i> จำนวนเบี้ยที่ส่งไปทั้งหมด</div>
+                        <div class="fin-val" id="mat-total-premium">-</div>
+                    </div>
+                    <div class="fin-box highlight">
+                        <div class="fin-label"><i class="fa-solid fa-hand-holding-dollar"></i> รับเงินคืนก้อนโต (ปีสุดท้าย)</div>
+                        <div class="fin-val" id="mat-return-val">-</div>
+                    </div>
                 </div>
-                <div class="fin-box">
-                    <div class="fin-label"><i class="fa-solid fa-sack-dollar"></i> จำนวนเบี้ยที่ส่งไปทั้งหมด</div>
-                    <div class="fin-val" id="mat-total-premium">-</div>
+                <div style="text-align: center; margin-top: 15px; font-size: 13px; color: #888;">
+                    * ความคุ้มครองชีวิต 100% ของทุนประกัน หรือ เบี้ยประกันภัยที่ได้รับชำระมาแล้ว แล้วแต่จำนวนใดมากกว่า<br>
+                    * เงินคืนเมื่ออายุครบ 90 ปี รับ 100% ของทุนประกัน
                 </div>
-                <div class="fin-box highlight">
-                    <div class="fin-label"><i class="fa-solid fa-hand-holding-dollar"></i> รับเงินคืนก้อนโต (ปีสุดท้าย)</div>
-                    <div class="fin-val" id="mat-return-val">-</div>
-                </div>
-            </div>
-            <div style="text-align: center; margin-top: 15px; font-size: 13px; color: #888;">
-                * ความคุ้มครองชีวิต 100% ของทุนประกัน หรือ เบี้ยประกันภัยที่ได้รับชำระมาแล้ว แล้วแต่จำนวนใดมากกว่า<br>
-                * เงินคืนเมื่ออายุครบ 90 ปี รับ 100% ของทุนประกัน
             </div>
         </div>
     </div>
@@ -706,63 +765,65 @@
                 <i class="fa-solid fa-expand" id="flowFsIcon"></i> <span id="flowFsText">ดูเต็มจอ / เลื่อนดู</span>
             </div>
             
-            <h2 class="ig-main-title" style="margin-top:25px;">
-                การจ่ายผลประโยชน์ <span id="ig-dynamic-sum" style="color: var(--primary);">2,000,000</span>
-            </h2>
-            
-            <div class="ig-flowchart">
-                <div class="ig-case-wrapper">
-                    <div class="ig-case-label">กรณีที่ 1 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
-                    
-                    <div class="ig-step">
-                        <div class="ig-circle ig-c-yellow">
-                            <div class="ig-circle-badge">ระยะ<br>เริ่มต้น</div>
-                            <div class="ig-txt-pay">จ่าย</div>
-                            <div class="ig-txt-pct">20%</div>
-                            <div class="ig-txt-amt" id="flow-early">400,000</div>
+            <div class="fs-document-area">
+                <h2 class="ig-main-title" style="margin-top:25px;">
+                    การจ่ายผลประโยชน์ <span id="ig-dynamic-sum" style="color: var(--primary);">2,000,000</span>
+                </h2>
+                 
+                <div class="ig-flowchart">
+                    <div class="ig-case-wrapper">
+                        <div class="ig-case-label">กรณีที่ 1 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
+                     
+                        <div class="ig-step">
+                            <div class="ig-circle ig-c-yellow">
+                                <div class="ig-circle-badge">ระยะ<br>เริ่มต้น</div>
+                                <div class="ig-txt-pay">จ่าย</div>
+                                <div class="ig-txt-pct">20%</div>
+                                <div class="ig-txt-amt" id="flow-early">400,000</div>
+                            </div>
+                            <div class="ig-step-desc">เมื่อวินิจฉัยพบ<br>1 ใน 5 โรคร้ายแรง</div>
                         </div>
-                        <div class="ig-step-desc">เมื่อวินิจฉัยพบ<br>1 ใน 5 โรคร้ายแรง</div>
+
+                        <div class="ig-arrow-box">
+                            <div class="ig-arrow-txt">ต่อมา</div>
+                            <i class="fa-solid fa-arrow-right ig-arrow-icon"></i>
+                        </div>
+
+                        <div class="ig-step">
+                            <div class="ig-circle ig-c-green">
+                                <div class="ig-circle-badge">ระยะ<br>รุนแรง</div>
+                                <div class="ig-txt-pay">จ่าย</div>
+                                <div class="ig-txt-pct">80%</div>
+                                <div class="ig-txt-amt" id="flow-last80">1,600,000</div>
+                            </div>
+                            <div class="ig-step-desc">เมื่อวินิจฉัยพบ<br>1 ใน 45 โรคร้ายแรง<br>หรือเสียชีวิต</div>
+                        </div>
+
+                        <div class="ig-equal-icon">=</div>
+
+                        <div class="ig-step">
+                            <div class="ig-circle ig-c-blue">
+                                <div class="ig-circle-badge" style="top:-10px;">รวมผล<br>ประโยชน์</div>
+                                <div class="ig-txt-pct" style="margin-top:10px;">100%</div>
+                                <div class="ig-txt-amt" id="flow-total100-1">2,000,000</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="ig-arrow-box">
-                        <div class="ig-arrow-txt">ต่อมา</div>
-                        <i class="fa-solid fa-arrow-right ig-arrow-icon"></i>
-                    </div>
+                    <div class="ig-divider-vertical"><div class="ig-divider-text">หรือ</div></div>
 
-                    <div class="ig-step">
-                        <div class="ig-circle ig-c-green">
-                            <div class="ig-circle-badge">ระยะ<br>รุนแรง</div>
-                            <div class="ig-txt-pay">จ่าย</div>
-                            <div class="ig-txt-pct">80%</div>
-                            <div class="ig-txt-amt" id="flow-last80">1,600,000</div>
+                    <div class="ig-case-wrapper">
+                        <div class="ig-case-label">กรณีที่ 2 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
+                     
+                        <div class="ig-step">
+                            <div class="ig-circle ig-c-orange">
+                                <div class="ig-circle-badge" style="top:-10px;">ระยะ<br>รุนแรง</div>
+                                <div class="ig-txt-pay">จ่าย</div>
+                                <div class="ig-txt-pct">100%</div>
+                                <div class="ig-txt-amt" id="flow-total100-2">2,000,000</div>
+                            </div>
+                            <div class="ig-step-desc">เมื่อวินิจฉัยพบ 1 ใน 45<br>โรคร้ายแรงหรือเสียชีวิต</div>
                         </div>
-                        <div class="ig-step-desc">เมื่อวินิจฉัยพบ<br>1 ใน 45 โรคร้ายแรง<br>หรือเสียชีวิต</div>
-                    </div>
-
-                    <div class="ig-equal-icon">=</div>
-
-                    <div class="ig-step">
-                        <div class="ig-circle ig-c-blue">
-                            <div class="ig-circle-badge" style="top:-10px;">รวมผล<br>ประโยชน์</div>
-                            <div class="ig-txt-pct" style="margin-top:10px;">100%</div>
-                            <div class="ig-txt-amt" id="flow-total100-1">2,000,000</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="ig-divider-vertical"><div class="ig-divider-text">หรือ</div></div>
-
-                <div class="ig-case-wrapper">
-                    <div class="ig-case-label">กรณีที่ 2 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
-                    
-                    <div class="ig-step">
-                        <div class="ig-circle ig-c-orange">
-                            <div class="ig-circle-badge" style="top:-10px;">ระยะ<br>รุนแรง</div>
-                            <div class="ig-txt-pay">จ่าย</div>
-                            <div class="ig-txt-pct">100%</div>
-                            <div class="ig-txt-amt" id="flow-total100-2">2,000,000</div>
-                        </div>
-                        <div class="ig-step-desc">เมื่อวินิจฉัยพบ 1 ใน 45<br>โรคร้ายแรงหรือเสียชีวิต</div>
                     </div>
                 </div>
             </div>
@@ -774,112 +835,122 @@
     <div class="modal-content-custom list-content">
         <span class="close-info-btn" onclick="closeDiseaseListModal()">&times;</span>
         
-        <h1 class="dl-main-title">รายชื่อโรคที่คุ้มครอง 50 โรคร้ายแรง</h1>
+        <div class="capture-area-wrapper">
+            <div class="capture-area-inner" id="capture-area">
+                <h1 class="dl-main-title">รายชื่อโรคที่คุ้มครอง 50 โรคร้ายแรง</h1>
 
                 <div class="dl-top-section">
-            <div class="dl-top-header">
-                <h2 class="dl-section-title">ระยะเริ่มต้น<br>(Early Stage)</h2>
-                <span class="dl-badge-orange">5 โรคร้ายแรง</span>
-            </div>
-            <div class="dl-top-list">
-                <ul class="dl-ul">
-                    <li class="dl-li"><span class="dl-num">1.</span><a class="dl-disease-link" onclick="openDiseaseModal('e1')">โรคมะเร็งระยะไม่ลุกลาม</a></li>
-                    <li class="dl-li"><span class="dl-num">2.</span><a class="dl-disease-link" onclick="openDiseaseModal('e2')">โรคหลอดเลือดหัวใจตีบที่รักษาด้วยการสวนหลอดเลือดหัวใจ</a></li>
-                    <li class="dl-li"><span class="dl-num">3.</span><a class="dl-disease-link" onclick="openDiseaseModal('e3')">โรคหลอดเลือดสมองที่ต้องได้รับการผ่าตัดลอกหลอดเลือดแดงคาโรติด</a></li>
-                    <li class="dl-li"><span class="dl-num">4.</span><a class="dl-disease-link" onclick="openDiseaseModal('e4')">โรคหลอดเลือดสมองโป่งพองที่รักษาโดยใช้ขดลวดผ่านสายสวนทางหลอดเลือด</a></li>
-                    <li class="dl-li"><span class="dl-num">5.</span><a class="dl-disease-link" onclick="openDiseaseModal('e5')">โรคหลอดเลือดสมองที่ได้รับการรักษาโดยวิธีใส่สายสวนเส้นเลือดแดงบริเวณคอ</a></li>
-                </ul>
-            </div>
-            <div class="dl-top-image">
-                <img src="cancer2.jpg" alt="การดูแลผู้ป่วย" onerror="this.src='https://via.placeholder.com/320x170/e86614/fff.png?text=FWD';">
+                    <div class="dl-top-header">
+                        <h2 class="dl-section-title">ระยะเริ่มต้น<br>(Early Stage)</h2>
+                        <span class="dl-badge-orange">5 โรคร้ายแรง</span>
+                    </div>
+                    <div class="dl-top-list">
+                        <ul class="dl-ul">
+                            <li class="dl-li"><span class="dl-num">1.</span><a class="dl-disease-link" onclick="openDiseaseModal('e1')">โรคมะเร็งระยะไม่ลุกลาม</a></li>
+                            <li class="dl-li"><span class="dl-num">2.</span><a class="dl-disease-link" onclick="openDiseaseModal('e2')">โรคหลอดเลือดหัวใจตีบที่รักษาด้วยการสวนหลอดเลือดหัวใจ</a></li>
+                            <li class="dl-li"><span class="dl-num">3.</span><a class="dl-disease-link" onclick="openDiseaseModal('e3')">โรคหลอดเลือดสมองที่ต้องได้รับการผ่าตัดลอกหลอดเลือดแดงคาโรติด</a></li>
+                            <li class="dl-li"><span class="dl-num">4.</span><a class="dl-disease-link" onclick="openDiseaseModal('e4')">โรคหลอดเลือดสมองโป่งพองที่รักษาโดยใช้ขดลวดผ่านสายสวนทางหลอดเลือด</a></li>
+                            <li class="dl-li"><span class="dl-num">5.</span><a class="dl-disease-link" onclick="openDiseaseModal('e5')">โรคหลอดเลือดสมองที่ได้รับการรักษาโดยวิธีใส่สายสวนเส้นเลือดแดงบริเวณคอ</a></li>
+                        </ul>
+                    </div>
+                    <div class="dl-top-image">
+                        <img src="cancer2.jpg" alt="การดูแลผู้ป่วย" onerror="this.src='https://via.placeholder.com/320x170/e86614/fff.png?text=FWD';">
+                    </div>
+                </div>
+
+                <hr class="dl-divider">
+
+                <div class="dl-bottom-section">
+                    <div>
+                        <div class="dl-bottom-header-wrapper">
+                            <h2 class="dl-section-title">ระยะรุนแรง (Last Stage)</h2>
+                            <span class="dl-badge-red">45 โรคร้ายแรง</span>
+                        </div>
+
+                        <div class="dl-category-title">โรคเกี่ยวกับมะเร็ง</div>
+                        <ul class="dl-ul">
+                            <li class="dl-li"><span class="dl-num">1.</span><a class="dl-disease-link" onclick="openDiseaseModal('l1')">โรคมะเร็งระยะลุกลาม</a></li>
+                        </ul>
+
+                        <div class="dl-category-title">โรคเกี่ยวกับหัวใจและหลอดเลือด</div>
+                        <ul class="dl-ul">
+                            <li class="dl-li"><span class="dl-num">2.</span><a class="dl-disease-link" onclick="openDiseaseModal('l2')">โรคกล้ามเนื้อหัวใจตายเฉียบพลันจากการขาดเลือด</a></li>
+                            <li class="dl-li"><span class="dl-num">3.</span><a class="dl-disease-link" onclick="openDiseaseModal('l3')">การผ่าตัดเส้นเลือดเลี้ยงกล้ามเนื้อหัวใจ</a></li>
+                            <li class="dl-li"><span class="dl-num">4.</span><a class="dl-disease-link" onclick="openDiseaseModal('l4')">การผ่าตัดลิ้นหัวใจโดยวิธีการเปิดหัวใจ</a></li>
+                            <li class="dl-li"><span class="dl-num">5.</span><a class="dl-disease-link" onclick="openDiseaseModal('l5')">การผ่าตัดเส้นเลือดแดงใหญ่ เอออร์ต้า</a></li>
+                            <li class="dl-li"><span class="dl-num">6.</span><a class="dl-disease-link" onclick="openDiseaseModal('l6')">โรคกล้ามเนื้อหัวใจ</a></li>
+                            <li class="dl-li"><span class="dl-num">7.</span><a class="dl-disease-link" onclick="openDiseaseModal('l7')">โรคเส้นเลือดหัวใจตีบ</a></li>
+                        </ul>
+
+                        <div class="dl-category-title">โรคเกี่ยวกับกล้ามเนื้อ กระดูกและข้อ</div>
+                        <ul class="dl-ul">
+                            <li class="dl-li"><span class="dl-num">8.</span><a class="dl-disease-link" onclick="openDiseaseModal('l8')">ภาวะข้ออักเสบรูมาตอยด์ชนิดรุนแรง</a></li>
+                            <li class="dl-li"><span class="dl-num">9.</span><a class="dl-disease-link" onclick="openDiseaseModal('l9')">โรคกล้ามเนื้ออักเสบ</a></li>
+                            <li class="dl-li"><span class="dl-num">10.</span><a class="dl-disease-link" onclick="openDiseaseModal('l10')">การผ่าตัดกระดูกสันหลังคดที่ไม่ทราบสาเหตุ</a></li>
+                        </ul>
+
+                        <div class="dl-category-title">โรคเกี่ยวกับระบบประสาทและสมอง</div>
+                        <ul class="dl-ul">
+                            <li class="dl-li"><span class="dl-num">11.</span><a class="dl-disease-link" onclick="openDiseaseModal('l11')">โรคหลอดเลือดสมองแตกหรืออุดตัน</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <ul class="dl-ul" style="margin-top: 5px;">
+                            <li class="dl-li"><span class="dl-num">12.</span><a class="dl-disease-link" onclick="openDiseaseModal('l12')">เนื้องอกในสมองชนิดที่ไม่ใช่มะเร็ง</a></li>
+                            <li class="dl-li"><span class="dl-num">13.</span><a class="dl-disease-link" onclick="openDiseaseModal('l13')">สมองอักเสบจากเชื้อไวรัส</a></li>
+                            <li class="dl-li"><span class="dl-num">14.</span><a class="dl-disease-link" onclick="openDiseaseModal('l14')">โรคเยื่อหุ้มสมองและไขสันหลังอักเสบจากเชื้อแบคทีเรีย</a></li>
+                            <li class="dl-li"><span class="dl-num">15.</span><a class="dl-disease-link" onclick="openDiseaseModal('l15')">โรคของเซลล์ประสาทควบคุมการเคลื่อนไหว</a></li>
+                            <li class="dl-li"><span class="dl-num">16.</span><a class="dl-disease-link" onclick="openDiseaseModal('l16')">โรคสมองเสื่อมชนิดอัลไซเมอร์</a></li>
+                            <li class="dl-li"><span class="dl-num">17.</span><a class="dl-disease-link" onclick="openDiseaseModal('l17')">โรคพาร์กินสัน</a></li>
+                            <li class="dl-li"><span class="dl-num">18.</span><a class="dl-disease-link" onclick="openDiseaseModal('l18')">โรคหลอดเลือดสมองโป่งพองที่ต้องรักษาโดยการผ่าตัด</a></li>
+                            <li class="dl-li"><span class="dl-num">19.</span><a class="dl-disease-link" onclick="openDiseaseModal('l19')">โรคระบบประสาทมัลติเพิล สเคลอโรสิส</a></li>
+                        </ul>
+
+                        <div class="dl-category-title">โรคเกี่ยวกับอวัยวะสำคัญ</div>
+                        <ul class="dl-ul">
+                            <li class="dl-li"><span class="dl-num">20.</span><a class="dl-disease-link" onclick="openDiseaseModal('l20')">การผ่าตัดเปลี่ยนอวัยวะหรือปลูกถ่ายไขกระดูก</a></li>
+                            <li class="dl-li"><span class="dl-num">21.</span><a class="dl-disease-link" onclick="openDiseaseModal('l21')">ไตวายเรื้อรัง</a></li>
+                            <li class="dl-li"><span class="dl-num">22.</span><a class="dl-disease-link" onclick="openDiseaseModal('l22')">ตับวาย</a></li>
+                            <li class="dl-li"><span class="dl-num">23.</span><a class="dl-disease-link" onclick="openDiseaseModal('l23')">โรคหลอดลมปอดอุดกั้นเรื้อรังขั้นรุนแรง / โรคปอดระยะสุดท้าย</a></li>
+                            <li class="dl-li"><span class="dl-num">24.</span><a class="dl-disease-link" onclick="openDiseaseModal('l24')">โรคไวรัสตับอักเสบขั้นรุนแรง</a></li>
+                            <li class="dl-li"><span class="dl-num">25.</span><a class="dl-disease-link" onclick="openDiseaseModal('l25')">ลูปัส จากโรคซิสเต็มมิค ลูปัส อีริเธมาโตซูส</a></li>
+                            <li class="dl-li"><span class="dl-num">26.</span><a class="dl-disease-link" onclick="openDiseaseModal('l26')">ภาวะตับอ่อนอักเสบที่กลับเป็นซ้ำและเรื้อรัง</a></li>
+                            <li class="dl-li"><span class="dl-num">27.</span><a class="dl-disease-link" onclick="openDiseaseModal('l27')">โรคถุงน้ำในไต</a></li>
+                            <li class="dl-li"><span class="dl-num">28.</span><a class="dl-disease-link" onclick="openDiseaseModal('l28')">โรคลำไส้อักเสบเป็นแผลรุนแรง</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <div class="dl-category-title no-mt">อื่นๆ</div>
+                        <ul class="dl-ul">
+                            <li class="dl-li"><span class="dl-num">29.</span><a class="dl-disease-link" onclick="openDiseaseModal('l29')">การสูญเสียการได้ยิน</a></li>
+                            <li class="dl-li"><span class="dl-num">30.</span><a class="dl-disease-link" onclick="openDiseaseModal('l30')">การสูญเสียความสามารถในการพูด</a></li>
+                            <li class="dl-li"><span class="dl-num">31.</span><a class="dl-disease-link" onclick="openDiseaseModal('l31')">แผลไหม้ฉกรรจ์</a></li>
+                            <li class="dl-li"><span class="dl-num">32.</span><a class="dl-disease-link" onclick="openDiseaseModal('l32')">อัมพาตของกล้ามเนื้อแขนหรือขา</a></li>
+                            <li class="dl-li"><span class="dl-num">33.</span><a class="dl-disease-link" onclick="openDiseaseModal('l33')">โรคโปลิโอ</a></li>
+                            <li class="dl-li"><span class="dl-num">34.</span><a class="dl-disease-link" onclick="openDiseaseModal('l34')">การสูญเสียการดำรงชีพอย่างอิสระ</a></li>
+                            <li class="dl-li"><span class="dl-num">35.</span><a class="dl-disease-link" onclick="openDiseaseModal('l35')">ตาบอด</a></li>
+                            <li class="dl-li"><span class="dl-num">36.</span><a class="dl-disease-link" onclick="openDiseaseModal('l36')">การฉีกขาดของรากประสาทต้นแขน</a></li>
+                            <li class="dl-li"><span class="dl-num">37.</span><a class="dl-disease-link" onclick="openDiseaseModal('l37')">โรคหนังแข็งชนิดลุกลาม</a></li>
+                            <li class="dl-li"><span class="dl-num">38.</span><a class="dl-disease-link" onclick="openDiseaseModal('l38')">โรคเท้าช้าง</a></li>
+                            <li class="dl-li"><span class="dl-num">39.</span><a class="dl-disease-link" onclick="openDiseaseModal('l39')">การทุพพลภาพถาวรสิ้นเชิง (ก่อนอายุ 70 ปี)</a></li>
+                            <li class="dl-li"><span class="dl-num">40.</span><a class="dl-disease-link" onclick="openDiseaseModal('l40')">โรคโลหิตจางจากไขกระดูกไม่สร้างเม็ดโลหิต</a></li>
+                            <li class="dl-li"><span class="dl-num">41.</span><a class="dl-disease-link" onclick="openDiseaseModal('l41')">โรคเนื้อเยื่อพังผืดอักเสบติดเชื้อและเป็นเนื้อตาย</a></li>
+                            <li class="dl-li"><span class="dl-num">42.</span><a class="dl-disease-link" onclick="openDiseaseModal('l42')">โรคแรงดันในหลอดเลือดแดงปอดสูงแบบปฐมภูมิ</a></li>
+                            <li class="dl-li"><span class="dl-num">43.</span><a class="dl-disease-link" onclick="openDiseaseModal('l43')">ภาวะโคม่า</a></li>
+                            <li class="dl-li"><span class="dl-num">44.</span><a class="dl-disease-link" onclick="openDiseaseModal('l44')">การบาดเจ็บที่ศีรษะอย่างรุนแรง</a></li>
+                            <li class="dl-li"><span class="dl-num">45.</span><a class="dl-disease-link" onclick="openDiseaseModal('l45')">ภาวะอะแพลลิก</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <hr class="dl-divider">
-
-                <div class="dl-bottom-section">
-                        <div>
-                <div class="dl-bottom-header-wrapper">
-                    <h2 class="dl-section-title">ระยะรุนแรง (Last Stage)</h2>
-                    <span class="dl-badge-red">45 โรคร้ายแรง</span>
-                </div>
-
-                <div class="dl-category-title">โรคเกี่ยวกับมะเร็ง</div>
-                <ul class="dl-ul">
-                    <li class="dl-li"><span class="dl-num">1.</span><a class="dl-disease-link" onclick="openDiseaseModal('l1')">โรคมะเร็งระยะลุกลาม</a></li>
-                </ul>
-
-                <div class="dl-category-title">โรคเกี่ยวกับหัวใจและหลอดเลือด</div>
-                <ul class="dl-ul">
-                    <li class="dl-li"><span class="dl-num">2.</span><a class="dl-disease-link" onclick="openDiseaseModal('l2')">โรคกล้ามเนื้อหัวใจตายเฉียบพลันจากการขาดเลือด</a></li>
-                    <li class="dl-li"><span class="dl-num">3.</span><a class="dl-disease-link" onclick="openDiseaseModal('l3')">การผ่าตัดเส้นเลือดเลี้ยงกล้ามเนื้อหัวใจ</a></li>
-                    <li class="dl-li"><span class="dl-num">4.</span><a class="dl-disease-link" onclick="openDiseaseModal('l4')">การผ่าตัดลิ้นหัวใจโดยวิธีการเปิดหัวใจ</a></li>
-                    <li class="dl-li"><span class="dl-num">5.</span><a class="dl-disease-link" onclick="openDiseaseModal('l5')">การผ่าตัดเส้นเลือดแดงใหญ่ เอออร์ต้า</a></li>
-                    <li class="dl-li"><span class="dl-num">6.</span><a class="dl-disease-link" onclick="openDiseaseModal('l6')">โรคกล้ามเนื้อหัวใจ</a></li>
-                    <li class="dl-li"><span class="dl-num">7.</span><a class="dl-disease-link" onclick="openDiseaseModal('l7')">โรคเส้นเลือดหัวใจตีบ</a></li>
-                </ul>
-
-                <div class="dl-category-title">โรคเกี่ยวกับกล้ามเนื้อ กระดูกและข้อ</div>
-                <ul class="dl-ul">
-                    <li class="dl-li"><span class="dl-num">8.</span><a class="dl-disease-link" onclick="openDiseaseModal('l8')">ภาวะข้ออักเสบรูมาตอยด์ชนิดรุนแรง</a></li>
-                    <li class="dl-li"><span class="dl-num">9.</span><a class="dl-disease-link" onclick="openDiseaseModal('l9')">โรคกล้ามเนื้ออักเสบ</a></li>
-                    <li class="dl-li"><span class="dl-num">10.</span><a class="dl-disease-link" onclick="openDiseaseModal('l10')">การผ่าตัดกระดูกสันหลังคดที่ไม่ทราบสาเหตุ</a></li>
-                </ul>
-
-                <div class="dl-category-title">โรคเกี่ยวกับระบบประสาทและสมอง</div>
-                <ul class="dl-ul">
-                    <li class="dl-li"><span class="dl-num">11.</span><a class="dl-disease-link" onclick="openDiseaseModal('l11')">โรคหลอดเลือดสมองแตกหรืออุดตัน</a></li>
-                </ul>
-            </div>
-
-                        <div>
-                <ul class="dl-ul" style="margin-top: 5px;">
-                    <li class="dl-li"><span class="dl-num">12.</span><a class="dl-disease-link" onclick="openDiseaseModal('l12')">เนื้องอกในสมองชนิดที่ไม่ใช่มะเร็ง</a></li>
-                    <li class="dl-li"><span class="dl-num">13.</span><a class="dl-disease-link" onclick="openDiseaseModal('l13')">สมองอักเสบจากเชื้อไวรัส</a></li>
-                    <li class="dl-li"><span class="dl-num">14.</span><a class="dl-disease-link" onclick="openDiseaseModal('l14')">โรคเยื่อหุ้มสมองและไขสันหลังอักเสบจากเชื้อแบคทีเรีย</a></li>
-                    <li class="dl-li"><span class="dl-num">15.</span><a class="dl-disease-link" onclick="openDiseaseModal('l15')">โรคของเซลล์ประสาทควบคุมการเคลื่อนไหว</a></li>
-                    <li class="dl-li"><span class="dl-num">16.</span><a class="dl-disease-link" onclick="openDiseaseModal('l16')">โรคสมองเสื่อมชนิดอัลไซเมอร์</a></li>
-                    <li class="dl-li"><span class="dl-num">17.</span><a class="dl-disease-link" onclick="openDiseaseModal('l17')">โรคพาร์กินสัน</a></li>
-                    <li class="dl-li"><span class="dl-num">18.</span><a class="dl-disease-link" onclick="openDiseaseModal('l18')">โรคหลอดเลือดสมองโป่งพองที่ต้องรักษาโดยการผ่าตัด</a></li>
-                    <li class="dl-li"><span class="dl-num">19.</span><a class="dl-disease-link" onclick="openDiseaseModal('l19')">โรคระบบประสาทมัลติเพิล สเคลอโรสิส</a></li>
-                </ul>
-
-                <div class="dl-category-title">โรคเกี่ยวกับอวัยวะสำคัญ</div>
-                <ul class="dl-ul">
-                    <li class="dl-li"><span class="dl-num">20.</span><a class="dl-disease-link" onclick="openDiseaseModal('l20')">การผ่าตัดเปลี่ยนอวัยวะหรือปลูกถ่ายไขกระดูก</a></li>
-                    <li class="dl-li"><span class="dl-num">21.</span><a class="dl-disease-link" onclick="openDiseaseModal('l21')">ไตวายเรื้อรัง</a></li>
-                    <li class="dl-li"><span class="dl-num">22.</span><a class="dl-disease-link" onclick="openDiseaseModal('l22')">ตับวาย</a></li>
-                    <li class="dl-li"><span class="dl-num">23.</span><a class="dl-disease-link" onclick="openDiseaseModal('l23')">โรคหลอดลมปอดอุดกั้นเรื้อรังขั้นรุนแรง / โรคปอดระยะสุดท้าย</a></li>
-                    <li class="dl-li"><span class="dl-num">24.</span><a class="dl-disease-link" onclick="openDiseaseModal('l24')">โรคไวรัสตับอักเสบขั้นรุนแรง</a></li>
-                    <li class="dl-li"><span class="dl-num">25.</span><a class="dl-disease-link" onclick="openDiseaseModal('l25')">ลูปัส จากโรคซิสเต็มมิค ลูปัส อีริเธมาโตซูส</a></li>
-                    <li class="dl-li"><span class="dl-num">26.</span><a class="dl-disease-link" onclick="openDiseaseModal('l26')">ภาวะตับอ่อนอักเสบที่กลับเป็นซ้ำและเรื้อรัง</a></li>
-                    <li class="dl-li"><span class="dl-num">27.</span><a class="dl-disease-link" onclick="openDiseaseModal('l27')">โรคถุงน้ำในไต</a></li>
-                    <li class="dl-li"><span class="dl-num">28.</span><a class="dl-disease-link" onclick="openDiseaseModal('l28')">โรคลำไส้อักเสบเป็นแผลรุนแรง</a></li>
-                </ul>
-            </div>
-
-                        <div>
-                <div class="dl-category-title no-mt">อื่นๆ</div>
-                <ul class="dl-ul">
-                    <li class="dl-li"><span class="dl-num">29.</span><a class="dl-disease-link" onclick="openDiseaseModal('l29')">การสูญเสียการได้ยิน</a></li>
-                    <li class="dl-li"><span class="dl-num">30.</span><a class="dl-disease-link" onclick="openDiseaseModal('l30')">การสูญเสียความสามารถในการพูด</a></li>
-                    <li class="dl-li"><span class="dl-num">31.</span><a class="dl-disease-link" onclick="openDiseaseModal('l31')">แผลไหม้ฉกรรจ์</a></li>
-                    <li class="dl-li"><span class="dl-num">32.</span><a class="dl-disease-link" onclick="openDiseaseModal('l32')">อัมพาตของกล้ามเนื้อแขนหรือขา</a></li>
-                    <li class="dl-li"><span class="dl-num">33.</span><a class="dl-disease-link" onclick="openDiseaseModal('l33')">โรคโปลิโอ</a></li>
-                    <li class="dl-li"><span class="dl-num">34.</span><a class="dl-disease-link" onclick="openDiseaseModal('l34')">การสูญเสียการดำรงชีพอย่างอิสระ</a></li>
-                    <li class="dl-li"><span class="dl-num">35.</span><a class="dl-disease-link" onclick="openDiseaseModal('l35')">ตาบอด</a></li>
-                    <li class="dl-li"><span class="dl-num">36.</span><a class="dl-disease-link" onclick="openDiseaseModal('l36')">การฉีกขาดของรากประสาทต้นแขน</a></li>
-                    <li class="dl-li"><span class="dl-num">37.</span><a class="dl-disease-link" onclick="openDiseaseModal('l37')">โรคหนังแข็งชนิดลุกลาม</a></li>
-                    <li class="dl-li"><span class="dl-num">38.</span><a class="dl-disease-link" onclick="openDiseaseModal('l38')">โรคเท้าช้าง</a></li>
-                    <li class="dl-li"><span class="dl-num">39.</span><a class="dl-disease-link" onclick="openDiseaseModal('l39')">การทุพพลภาพถาวรสิ้นเชิง (ก่อนอายุ 70 ปี)</a></li>
-                    <li class="dl-li"><span class="dl-num">40.</span><a class="dl-disease-link" onclick="openDiseaseModal('l40')">โรคโลหิตจางจากไขกระดูกไม่สร้างเม็ดโลหิต</a></li>
-                    <li class="dl-li"><span class="dl-num">41.</span><a class="dl-disease-link" onclick="openDiseaseModal('l41')">โรคเนื้อเยื่อพังผืดอักเสบติดเชื้อและเป็นเนื้อตาย</a></li>
-                    <li class="dl-li"><span class="dl-num">42.</span><a class="dl-disease-link" onclick="openDiseaseModal('l42')">โรคแรงดันในหลอดเลือดแดงปอดสูงแบบปฐมภูมิ</a></li>
-                    <li class="dl-li"><span class="dl-num">43.</span><a class="dl-disease-link" onclick="openDiseaseModal('l43')">ภาวะโคม่า</a></li>
-                    <li class="dl-li"><span class="dl-num">44.</span><a class="dl-disease-link" onclick="openDiseaseModal('l44')">การบาดเจ็บที่ศีรษะอย่างรุนแรง</a></li>
-                    <li class="dl-li"><span class="dl-num">45.</span><a class="dl-disease-link" onclick="openDiseaseModal('l45')">ภาวะอะแพลลิก</a></li>
-                </ul>
-            </div>
+        <div class="dl-action-bar">
+            <button class="btn-capture" id="share-btn" onclick="captureAndShare()">
+                <i class="fa-solid fa-camera"></i> บันทึก / แชร์ภาพ
+            </button>
         </div>
     </div>
 </div>
@@ -895,6 +966,7 @@
         <div class="info-box impact"><div class="info-label"><i class="fa-solid fa-triangle-exclamation"></i> สรุปผลกระทบ</div><p class="info-text" id="modalImpact"></p></div>
     </div>
 </div>
+
 <script>
     // ตารางเรทเบี้ยประกัน
     const rateTableMain = {
@@ -1082,6 +1154,69 @@
             icon.className = 'fa-solid fa-expand';
             text.innerText = 'ดูเต็มจอ / เลื่อนดู';
         }
+    }
+
+    // --- ฟังก์ชันบันทึกและแชร์รูปภาพที่เพิ่มใหม่ --- //
+    async function captureAndShare() {
+        const element = document.getElementById('capture-area');
+        const btn = document.getElementById('share-btn');
+        const originalText = btn.innerHTML;
+        
+        // แสดงสถานะโหลด
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังสร้างภาพ...';
+        btn.style.pointerEvents = 'none';
+
+        try {
+            // จับภาพ DOM Element
+            const canvas = await html2canvas(element, { 
+                scale: 2, // เพิ่มความคมชัด
+                useCORS: true, 
+                backgroundColor: "#ffffff" 
+            });
+            
+            const imageURL = canvas.toDataURL("image/png");
+
+            // ดึงไฟล์ Blob สำหรับใช้งาน Share API
+            canvas.toBlob(async (blob) => {
+                const file = new File([blob], '50CI_List.png', { type: 'image/png' });
+
+                // เช็คว่า Browser รองรับ Web Share API และสามารถแชร์ไฟล์ได้หรือไม่ (ส่วนใหญ่ใช้งานได้บนมือถือ)
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            title: 'รายชื่อ 50 โรคร้ายแรง',
+                            text: 'ตารางความคุ้มครอง 50 โรคร้ายแรง แผนประกัน FWD',
+                            files: [file]
+                        });
+                    } catch (e) {
+                        console.log('Share canceled or failed', e);
+                        // ถ้าแชร์ไม่สำเร็จ (เช่นกดยกเลิก) ก็โหลดเป็นไฟล์แทน
+                        downloadImage(imageURL);
+                    }
+                } else {
+                    // สำหรับ PC หรือ Browser ที่ไม่รองรับ ให้โหลดไฟล์ภาพลงเครื่องโดยตรง
+                    downloadImage(imageURL);
+                }
+            }, 'image/png');
+
+        } catch (error) {
+            console.error('Error capturing image:', error);
+            alert('เกิดข้อผิดพลาดในการสร้างภาพ กรุณาลองใหม่อีกครั้ง');
+        } finally {
+            // คืนค่าปุ่มกลับเหมือนเดิม
+            btn.innerHTML = originalText;
+            btn.style.pointerEvents = 'auto';
+        }
+    }
+
+    // ฟังก์ชันช่วยสำหรับการดาวน์โหลดรูปภาพลงเครื่อง
+    function downloadImage(dataUrl) {
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'รายชื่อ50โรคร้ายแรง.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     // 3. Disease Detail Logic
