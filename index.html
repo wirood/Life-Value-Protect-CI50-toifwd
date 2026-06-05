@@ -141,7 +141,7 @@
     .error-msg { color: #d32f2f; font-size: 13px; margin-top: 10px; display: none; font-weight: 500; }
     .requirements { margin-top: 15px; border: 1px solid var(--border-color); border-radius: 12px; padding: 15px 20px; background-color: #fafafa; }
     .requirements h3 { font-size: 18px; display: flex; align-items: center; gap: 8px; color: var(--primary); margin: 0 0 12px 0; }
-    .req-list { list-style: none; padding: 0; margin: 0; font-size: 15px; color: var(--text-grey); }
+    .req-list { list-style: none; padding: 0; margin: 0; font-size: 14px; color: var(--text-grey); }
     .req-list li { margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; }
     .req-list i { margin-top: 4px; color: var(--line-green); }
 
@@ -198,7 +198,7 @@
     .td-bullet { padding-left: 35px !important; color: var(--text-grey); font-size: 12.5px;}
     .td-highlight-text { color: var(--primary); font-weight: 600;}
 
-    /* --- ACTION BUTTONS (4 ปุ่ม ดันชิดล่างสุดเสมอ) --- */
+    /* --- ACTION BUTTONS --- */
     .action-buttons-wrapper { 
         display: flex; flex-direction: column; gap: 8px; 
         margin-top: auto; 
@@ -244,11 +244,56 @@
     /* --- INFOGRAPHIC MODALS BASE --- */
     .modal-overlay-custom { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 2000; justify-content: center; align-items: center; padding: 20px;}
     .modal-content-custom { background: #fff; width: 100%; border-radius: 15px; position: relative; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin: auto; font-family: 'Prompt', sans-serif;}
-    .close-info-btn { position: absolute; top: 12px; right: 18px; font-size: 28px; color: #999; cursor: pointer; line-height: 1; font-family: 'Prompt', sans-serif; transition: 0.2s;}
+    .close-info-btn { position: absolute; top: 12px; right: 18px; font-size: 28px; color: #999; cursor: pointer; line-height: 1; font-family: 'Prompt', sans-serif; transition: 0.2s; z-index: 900;}
     .close-info-btn:hover { color: var(--primary); transform: scale(1.1);}
 
+    /* --- PAN & ZOOM FULLSCREEN SYSTEM --- */
+    .ig-fullscreen-inner {
+        background: #fdfaf6;
+        padding: 30px;
+        border-radius: 15px;
+        position: relative;
+        width: 100%;
+        transition: 0.3s;
+        max-width: 850px;
+        margin: 0 auto;
+    }
+    .fs-toggle-btn {
+        position: absolute;
+        top: 15px;
+        left: 20px;
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid var(--primary);
+        z-index: 900;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: 0.2s;
+    }
+    .fs-toggle-btn:hover { background: var(--primary); color: white; }
+
+    /* เมื่อกดขยายเต็มจอ */
+    .ig-fullscreen-inner.is-fullscreen {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        width: 100vw; height: 100vh;
+        max-width: none; max-height: none;
+        border-radius: 0;
+        z-index: 9999;
+        overflow: auto; /* เปิดให้เลื่อนอิสระ */
+        padding: 60px 20px 20px 20px; /* เว้นที่ให้ปุ่มปิดด้านบน */
+    }
+    .ig-fullscreen-inner.is-fullscreen .fs-toggle-btn { top: 15px; left: 15px; }
+    .ig-fullscreen-inner.is-fullscreen .close-info-btn { top: 10px; right: 15px; position: fixed; }
+
     /* 1. Bar Chart Modal (Maturity 90/20) */
-    .mat-content { max-width: 850px; background: #fdfaf6; }
     .mat-title { color: #d68a27; font-size: 26px; font-weight: bold; margin: 0 0 5px 0;}
     .mat-subtitle { font-size: 15px; color: #666; margin-bottom: 25px;}
     
@@ -294,7 +339,6 @@
     .fin-box.highlight .fin-val { color: #06C755; font-size: 26px;}
 
     /* 2. Flowchart Modal */
-    .flowchart-content { max-width: 850px; }
     .ig-main-title { color: #d68a27; font-size: 24px; font-weight: bold; margin: 0 0 30px 0; }
     .ig-flowchart { display: flex; justify-content: space-between; align-items: stretch; position: relative; padding-top: 15px;}
     .ig-case-wrapper { display: flex; align-items: flex-start; gap: 10px; }
@@ -353,12 +397,12 @@
     .detail-content .info-box.impact .info-label { color: var(--impact-red); }
     .detail-content .info-text { font-size: 22px; line-height: 1.3; margin: 0; color: var(--text-dark);}
 
-    /* --- STICKY BAR --- */
+    /* --- STICKY BAR FIX: แก้ไขบั๊กรูปล้นจอ --- */
     .sticky-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); padding: 15px 0; transform: translateY(100%); transition: 0.4s; z-index: 1000; border-top: 2px solid var(--primary); }
     .sticky-bar.show { transform: translateY(0); }
     .sticky-content { max-width: 1100px; margin: auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
     .sticky-left { display: flex; align-items: center; gap: 15px; }
-    .sticky-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .sticky-avatar { width: 48px; height: 48px; min-width: 48px; min-height: 48px; flex-shrink: 0; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transform: translateZ(0); }
     .sticky-info h4 { margin: 0; font-size: 18px; }
     .sticky-info p { margin: 0; font-size: 14px; color: var(--text-grey); }
     .sticky-right { display: flex; align-items: center; gap: 20px; }
@@ -366,14 +410,22 @@
     .sticky-btn { background: var(--line-green); color: white; padding: 12px 30px; border-radius: 8px; font-weight: 600; font-family: 'Prompt'; font-size: 16px; cursor: pointer; border: none;}
 
     /* --- RESPONSIVE เฉพาะส่วน Modal ให้อ่านง่าย --- */
+    /* บังคับให้กราฟในโหมด Fullscreen บนมือถือมีความกว้างขั้นต่ำ เพื่อให้เลื่อนดูได้ ไม่โดนบีบ */
+    @media (max-width: 850px) {
+        .ig-fullscreen-inner.is-fullscreen .bar-chart-wrapper,
+        .ig-fullscreen-inner.is-fullscreen .ig-flowchart,
+        .ig-fullscreen-inner.is-fullscreen .fin-summary-row {
+            min-width: 800px; /* บังคับสัดส่วนให้เป็นแนวนอนเสมอเมื่อขยายเต็มจอ */
+        }
+        .ig-fullscreen-inner.is-fullscreen .fin-summary-row { flex-wrap: nowrap; } /* ห้ามปุ่มตกลงมา */
+        
+        .dl-bottom-section { grid-template-columns: 1fr 1fr; }
+    }
+
     @media (max-width: 1024px) {
         .ig-flowchart { flex-direction: column; align-items: center; gap: 15px;}
         .ig-divider-vertical { width: 100%; height: 1px; border-left: none; border-top: 1px dashed #d68a27; margin: 15px 0;}
         .ig-divider-text { padding: 0 10px; }
-    }
-
-    @media (max-width: 850px) {
-        .dl-bottom-section { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 768px) {
@@ -471,7 +523,7 @@
                 <div class="agent-info">
                     <h4>นฤมล คำใบ <span style="font-weight: 400; font-size:14px;">(ผู้จัดการขาย)</span></h4>
                     <p>ใบอนุญาตตัวแทน: 6901010926</p>
-                    <p style="color: var(--primary);">ประสบการณ์ธุรกิจ <span id="experience-text"></span></p>
+                    <p style="color: var(--primary); white-space: nowrap;">ประสบการณ์ธุรกิจ <span id="experience-text"></span></p>
                     <a href="tel:0869017235" class="phone"><i class="fa fa-phone"></i> 086-901-7235</a>
                 </div>
                 <div class="agent-qr-container">
@@ -568,7 +620,7 @@
 <div class="sticky-bar" id="sticky-bar">
     <div class="sticky-content">
         <div class="sticky-left">
-            <div class="sticky-avatar"><img id="sticky-avatar-img" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar" style="width:100%; object-fit:cover;"></div>
+            <div class="sticky-avatar"><img id="sticky-avatar-img" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar" style="width:100%; height:100%; object-fit:cover;"></div>
             <div class="sticky-info">
                 <h4>เงินออม + <span style="color: var(--primary);">50 โรคร้ายแรง</span></h4>
                 <p><span id="sticky-gender-text">ชาย</span>, <span id="sticky-age-text">30</span> ปี | <span id="sticky-plan-text">แผน 2.2M</span></p>
@@ -581,16 +633,20 @@
     </div>
 </div>
 
-
 <div class="modal-overlay-custom" id="maturityModal">
-    <div class="modal-content-custom mat-content">
-        <span class="close-info-btn" onclick="closeMaturityModal()">&times;</span>
-        
-        <h2 class="mat-title">ผลประโยชน์และความคุ้มครองชีวิต</h2>
-        <p class="mat-subtitle">แผนความคุ้มครองชีวิต 90/20 (ชำระเบี้ย 20 ปี)</p>
-        
-                <div class="bar-chart-wrapper">
-            <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 10px;">
+    <div class="modal-content-custom mat-content" style="padding:0; background:transparent; box-shadow:none;">
+        <div class="ig-fullscreen-inner" id="matContentInner">
+            <span class="close-info-btn" onclick="closeMaturityModal()">&times;</span>
+            
+            <div class="fs-toggle-btn" onclick="toggleMatFullscreen()">
+                <i class="fa-solid fa-expand" id="matFsIcon"></i> <span id="matFsText">ดูเต็มจอ / เลื่อนดู</span>
+            </div>
+            
+            <h2 class="mat-title" style="margin-top:25px;">ผลประโยชน์และความคุ้มครองชีวิต</h2>
+            <p class="mat-subtitle">แผนความคุ้มครองชีวิต 90/20 (ชำระเบี้ย 20 ปี)</p>
+            
+                    <div class="bar-chart-wrapper">
+                <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 10px;">
                 <div style="display: flex; align-items: flex-end; min-width: 600px;">
                                     <div class="y-axis-label">ความคุ้มครองชีวิต<br><span class="y-axis-sub">(% ทุนประกันภัย)</span></div>
                     
@@ -619,90 +675,95 @@
             </div>
         </div>
 
-                <div class="fin-summary-row">
-            <div class="fin-box">
-                <div class="fin-label"><i class="fa-solid fa-coins"></i> จำนวนเบี้ยสัญญาหลัก ปีละ</div>
-                <div class="fin-val" id="mat-annual-premium">-</div>
+            <div class="fin-summary-row">
+                <div class="fin-box">
+                    <div class="fin-label"><i class="fa-solid fa-coins"></i> จำนวนเบี้ยสัญญาหลัก ปีละ</div>
+                    <div class="fin-val" id="mat-annual-premium">-</div>
+                </div>
+                <div class="fin-box">
+                    <div class="fin-label"><i class="fa-solid fa-sack-dollar"></i> จำนวนเบี้ยที่ส่งไปทั้งหมด</div>
+                    <div class="fin-val" id="mat-total-premium">-</div>
+                </div>
+                <div class="fin-box highlight">
+                    <div class="fin-label"><i class="fa-solid fa-hand-holding-dollar"></i> รับเงินคืนก้อนโต (ปีสุดท้าย)</div>
+                    <div class="fin-val" id="mat-return-val">-</div>
+                </div>
             </div>
-            <div class="fin-box">
-                <div class="fin-label"><i class="fa-solid fa-sack-dollar"></i> จำนวนเบี้ยที่ส่งไปทั้งหมด</div>
-                <div class="fin-val" id="mat-total-premium">-</div>
-            </div>
-            <div class="fin-box highlight">
-                <div class="fin-label"><i class="fa-solid fa-hand-holding-dollar"></i> รับเงินคืนก้อนโต (ปีสุดท้าย)</div>
-                <div class="fin-val" id="mat-return-val">-</div>
+            <div style="text-align: center; margin-top: 15px; font-size: 13px; color: #888;">
+                * ความคุ้มครองชีวิต 100% ของทุนประกัน หรือ เบี้ยประกันภัยที่ได้รับชำระมาแล้ว แล้วแต่จำนวนใดมากกว่า<br>
+                * เงินคืนเมื่ออายุครบ 90 ปี รับ 100% ของทุนประกัน
             </div>
         </div>
-        <div style="text-align: center; margin-top: 15px; font-size: 13px; color: #888;">
-            * ความคุ้มครองชีวิต 100% ของทุนประกัน หรือ เบี้ยประกันภัยที่ได้รับชำระมาแล้ว แล้วแต่จำนวนใดมากกว่า<br>
-            * เงินคืนเมื่ออายุครบ 90 ปี รับ 100% ของทุนประกัน
-        </div>
-
     </div>
 </div>
 
-
 <div class="modal-overlay-custom" id="flowchartModal">
-    <div class="modal-content-custom flowchart-content">
-        <span class="close-info-btn" onclick="closeFlowchartModal()">&times;</span>
-        
-        <h2 class="ig-main-title">
-            การจ่ายผลประโยชน์ <span id="ig-dynamic-sum" style="color: var(--primary);">2,000,000</span>
-        </h2>
-        
-        <div class="ig-flowchart">
-                        <div class="ig-case-wrapper">
-                <div class="ig-case-label">กรณีที่ 1 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
-                
-                <div class="ig-step">
-                    <div class="ig-circle ig-c-yellow">
-                        <div class="ig-circle-badge">ระยะ<br>เริ่มต้น</div>
-                        <div class="ig-txt-pay">จ่าย</div>
-                        <div class="ig-txt-pct">20%</div>
-                        <div class="ig-txt-amt" id="flow-early">400,000</div>
-                    </div>
-                    <div class="ig-step-desc">เมื่อวินิจฉัยพบ<br>1 ใน 5 โรคร้ายแรง</div>
-                </div>
-
-                <div class="ig-arrow-box">
-                    <div class="ig-arrow-txt">ต่อมา</div>
-                    <i class="fa-solid fa-arrow-right ig-arrow-icon"></i>
-                </div>
-
-                <div class="ig-step">
-                    <div class="ig-circle ig-c-green">
-                        <div class="ig-circle-badge">ระยะ<br>รุนแรง</div>
-                        <div class="ig-txt-pay">จ่าย</div>
-                        <div class="ig-txt-pct">80%</div>
-                        <div class="ig-txt-amt" id="flow-last80">1,600,000</div>
-                    </div>
-                    <div class="ig-step-desc">เมื่อวินิจฉัยพบ<br>1 ใน 45 โรคร้ายแรง<br>หรือเสียชีวิต</div>
-                </div>
-
-                <div class="ig-equal-icon">=</div>
-
-                <div class="ig-step">
-                    <div class="ig-circle ig-c-blue">
-                        <div class="ig-circle-badge" style="top:-10px;">รวมผล<br>ประโยชน์</div>
-                        <div class="ig-txt-pct" style="margin-top:10px;">100%</div>
-                        <div class="ig-txt-amt" id="flow-total100-1">2,000,000</div>
-                    </div>
-                </div>
+    <div class="modal-content-custom flowchart-content" style="padding:0; background:transparent; box-shadow:none;">
+        <div class="ig-fullscreen-inner" id="flowContentInner">
+            <span class="close-info-btn" onclick="closeFlowchartModal()">&times;</span>
+            
+            <div class="fs-toggle-btn" onclick="toggleFlowFullscreen()">
+                <i class="fa-solid fa-expand" id="flowFsIcon"></i> <span id="flowFsText">ดูเต็มจอ / เลื่อนดู</span>
             </div>
-
-                        <div class="ig-divider-vertical"><div class="ig-divider-text">หรือ</div></div>
-
-                        <div class="ig-case-wrapper">
-                <div class="ig-case-label">กรณีที่ 2 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
-                
-                <div class="ig-step">
-                    <div class="ig-circle ig-c-orange">
-                        <div class="ig-circle-badge" style="top:-10px;">ระยะ<br>รุนแรง</div>
-                        <div class="ig-txt-pay">จ่าย</div>
-                        <div class="ig-txt-pct">100%</div>
-                        <div class="ig-txt-amt" id="flow-total100-2">2,000,000</div>
+            
+            <h2 class="ig-main-title" style="margin-top:25px;">
+                การจ่ายผลประโยชน์ <span id="ig-dynamic-sum" style="color: var(--primary);">2,000,000</span>
+            </h2>
+            
+            <div class="ig-flowchart">
+                <div class="ig-case-wrapper">
+                    <div class="ig-case-label">กรณีที่ 1 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
+                    
+                    <div class="ig-step">
+                        <div class="ig-circle ig-c-yellow">
+                            <div class="ig-circle-badge">ระยะ<br>เริ่มต้น</div>
+                            <div class="ig-txt-pay">จ่าย</div>
+                            <div class="ig-txt-pct">20%</div>
+                            <div class="ig-txt-amt" id="flow-early">400,000</div>
+                        </div>
+                        <div class="ig-step-desc">เมื่อวินิจฉัยพบ<br>1 ใน 5 โรคร้ายแรง</div>
                     </div>
-                    <div class="ig-step-desc">เมื่อวินิจฉัยพบ 1 ใน 45<br>โรคร้ายแรงหรือเสียชีวิต</div>
+
+                    <div class="ig-arrow-box">
+                        <div class="ig-arrow-txt">ต่อมา</div>
+                        <i class="fa-solid fa-arrow-right ig-arrow-icon"></i>
+                    </div>
+
+                    <div class="ig-step">
+                        <div class="ig-circle ig-c-green">
+                            <div class="ig-circle-badge">ระยะ<br>รุนแรง</div>
+                            <div class="ig-txt-pay">จ่าย</div>
+                            <div class="ig-txt-pct">80%</div>
+                            <div class="ig-txt-amt" id="flow-last80">1,600,000</div>
+                        </div>
+                        <div class="ig-step-desc">เมื่อวินิจฉัยพบ<br>1 ใน 45 โรคร้ายแรง<br>หรือเสียชีวิต</div>
+                    </div>
+
+                    <div class="ig-equal-icon">=</div>
+
+                    <div class="ig-step">
+                        <div class="ig-circle ig-c-blue">
+                            <div class="ig-circle-badge" style="top:-10px;">รวมผล<br>ประโยชน์</div>
+                            <div class="ig-txt-pct" style="margin-top:10px;">100%</div>
+                            <div class="ig-txt-amt" id="flow-total100-1">2,000,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ig-divider-vertical"><div class="ig-divider-text">หรือ</div></div>
+
+                <div class="ig-case-wrapper">
+                    <div class="ig-case-label">กรณีที่ 2 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
+                    
+                    <div class="ig-step">
+                        <div class="ig-circle ig-c-orange">
+                            <div class="ig-circle-badge" style="top:-10px;">ระยะ<br>รุนแรง</div>
+                            <div class="ig-txt-pay">จ่าย</div>
+                            <div class="ig-txt-pct">100%</div>
+                            <div class="ig-txt-amt" id="flow-total100-2">2,000,000</div>
+                        </div>
+                        <div class="ig-step-desc">เมื่อวินิจฉัยพบ 1 ใน 45<br>โรคร้ายแรงหรือเสียชีวิต</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -973,17 +1034,55 @@
     window.addEventListener('scroll', () => { document.getElementById('sticky-bar').classList.toggle('show', window.scrollY > 300); });
 
     // --- Modal Controls --- //
-    // 0. Maturity 90/20
     function openMaturityModal() { document.getElementById('maturityModal').style.display = 'flex'; }
-    function closeMaturityModal() { document.getElementById('maturityModal').style.display = 'none'; }
+    function closeMaturityModal() { 
+        document.getElementById('maturityModal').style.display = 'none'; 
+        if(isMatFullscreen) toggleMatFullscreen(); // Reset fullscreen
+    }
     
-    // 1. Flowchart
     function openFlowchartModal() { document.getElementById('flowchartModal').style.display = 'flex'; }
-    function closeFlowchartModal() { document.getElementById('flowchartModal').style.display = 'none'; }
+    function closeFlowchartModal() { 
+        document.getElementById('flowchartModal').style.display = 'none'; 
+        if(isFlowFullscreen) toggleFlowFullscreen(); // Reset fullscreen
+    }
     
-    // 2. Disease List A4
     function openDiseaseListModal() { document.getElementById('diseaseListModal').style.display = 'flex'; }
     function closeDiseaseListModal() { document.getElementById('diseaseListModal').style.display = 'none'; }
+
+    // --- Fullscreen Toggle Logic --- //
+    let isMatFullscreen = false;
+    function toggleMatFullscreen() {
+        isMatFullscreen = !isMatFullscreen;
+        const inner = document.getElementById('matContentInner');
+        const icon = document.getElementById('matFsIcon');
+        const text = document.getElementById('matFsText');
+        if(isMatFullscreen) {
+            inner.classList.add('is-fullscreen');
+            icon.className = 'fa-solid fa-compress';
+            text.innerText = 'ย่อหน้าจอ';
+        } else {
+            inner.classList.remove('is-fullscreen');
+            icon.className = 'fa-solid fa-expand';
+            text.innerText = 'ดูเต็มจอ / เลื่อนดู';
+        }
+    }
+
+    let isFlowFullscreen = false;
+    function toggleFlowFullscreen() {
+        isFlowFullscreen = !isFlowFullscreen;
+        const inner = document.getElementById('flowContentInner');
+        const icon = document.getElementById('flowFsIcon');
+        const text = document.getElementById('flowFsText');
+        if(isFlowFullscreen) {
+            inner.classList.add('is-fullscreen');
+            icon.className = 'fa-solid fa-compress';
+            text.innerText = 'ย่อหน้าจอ';
+        } else {
+            inner.classList.remove('is-fullscreen');
+            icon.className = 'fa-solid fa-expand';
+            text.innerText = 'ดูเต็มจอ / เลื่อนดู';
+        }
+    }
 
     // 3. Disease Detail Logic
     const diseaseData = {
