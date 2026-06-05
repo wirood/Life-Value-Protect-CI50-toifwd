@@ -319,16 +319,32 @@
     .sticky-price { font-size: 28px; font-weight: bold; color: var(--primary);}
     .sticky-btn { background: var(--line-green); color: white; padding: 12px 30px; border-radius: 8px; font-weight: 600; font-family: 'Prompt'; font-size: 16px; cursor: pointer; border: none;}
 
-    /* --- RESPONSIVE --- */
+    /* --- RESPONSIVE (ปรับแก้ใหม่ ลดความยาวแบบลูกชิ้น) --- */
     @media (max-width: 1024px) {
-        .container { flex-direction: column; align-items: stretch; }
-        .left-panel, .right-panel { width: 100%; }
-        
+        /* สำหรับหน้าจอ Tablet แนวนอน ให้แบ่งซ้ายขวาแบบ 45% / 55% แทนการพับตกลงมา */
+        .container { flex-direction: row; flex-wrap: wrap; }
+        .left-panel { width: 45%; flex: auto; }
+        .right-panel { width: 50%; flex: auto; }
+
+        /* ปุ่มเมนูทั้ง 4 เปลี่ยนให้เป็น Grid 2x2 คอลัมน์ ไม่ให้เรียงยาวลงไปด้านล่าง */
+        .action-buttons-wrapper { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .btn-style { flex-direction: column; text-align: center; justify-content: center; padding: 15px 10px; }
+        .btn-style .brochure-icon { margin: 0 auto 10px auto; }
+        .btn-style .brochure-text { margin-left: 0; }
+        .btn-style .brochure-arrow { display: none; } /* ซ่อนลูกศรออกเพื่อประหยัดพื้นที่บนจอเล็ก */
+
         .ig-flowchart { flex-direction: column; align-items: center; gap: 15px;}
         .ig-divider-vertical { width: 100%; height: 1px; border-left: none; border-top: 1px dashed #d68a27; margin: 15px 0;}
         .ig-divider-text { padding: 0 10px; }
-        .dl-bottom-section { grid-template-columns: 1fr 1fr; }
     }
+
+    @media (max-width: 850px) {
+        /* บังคับพับ 100% เมื่อจอแคบกว่า 850px (เช่น iPad แนวตั้ง) */
+        .container { flex-direction: column; align-items: stretch; }
+        .left-panel, .right-panel { width: 100%; }
+        .dl-bottom-section { grid-template-columns: 1fr 1fr; } /* รายการ 50 โรค จัดเป็น 2 คอลัมน์ */
+    }
+
     @media (max-width: 768px) {
         .ig-case-wrapper { flex-direction: column; gap: 10px; align-items: center; }
         .ig-case-label { margin-top: 0; align-self: center;}
@@ -337,38 +353,52 @@
         .ig-arrow-txt { display: none; }
         .ig-equal-icon { margin-top: 0; }
         
-        .fin-summary-row { flex-direction: column; gap: 10px;}
+        /* สรุปผลประโยชน์กราฟแท่ง จัดเป็น Grid 2 อันบน 1 อันล่าง */
+        .fin-summary-row { flex-direction: row; flex-wrap: wrap; gap: 10px;}
+        .fin-box { flex: 1 1 45%; } 
+        .fin-box.highlight { flex: 1 1 100%; }
 
         .dl-top-section { flex-direction: column; align-items: stretch; }
         .dl-top-header, .dl-top-list, .dl-top-image { flex: auto; padding-right: 0;}
         .dl-top-image { order: -1; }
-        .dl-bottom-section { grid-template-columns: 1fr; }
     }
+
     @media (max-width: 600px) {
-        .plan-options { gap: 10px; }
-        .plan-opt-btn { padding: 22px 5px 10px 5px; }
+        .plan-options { gap: 8px; }
+        .plan-opt-btn { padding: 18px 5px 8px 5px; }
         .slider-header { flex-direction: column; align-items: flex-start; gap: 8px; }
         .slider-input-wrapper { width: 100%; }
         .plan-header { flex-direction: column; gap: 10px; }
         .plan-price-display { text-align: left; }
         .coverage-table-container { overflow-x: auto; }
-        .agent-card-left { flex-direction: column; text-align: center; }
-        .agent-qr-container { margin: 5px auto 0 auto; }
+
+        /* บังคับให้ Agent Card เป็นแนวนอนเสมอเพื่อไม่ให้จอกินพื้นที่แนวตั้งมากไป */
+        .agent-card-left { flex-direction: row; text-align: left; align-items: center; padding: 12px 15px; }
+        .agent-profile-img { width: 55px; height: 55px; }
+        .agent-info h4 { font-size: 15px; }
+        .agent-qr-img { width: 50px; height: 50px; }
+        .agent-qr-container { margin: 0; margin-left: auto; }
         
         .modal-content-custom { padding: 20px; }
         .mat-title { font-size: 20px; line-height: 1.3;}
         .ig-main-title { font-size: 22px; text-align: center; line-height: 1.4;}
         .dl-main-title { font-size: 22px; text-align: center; line-height: 1.4;}
-        
+
         .chart-bar-container { width: 90%; }
         .x-lbl { font-size: 10px; }
         .premium-period span { font-size: 10px;}
-        
+
         .sticky-content { padding: 0 15px; }
         .sticky-avatar { display: none; }
         .sticky-info h4 { font-size: 14px; }
         .sticky-price { font-size: 20px; }
         .sticky-btn { padding: 10px 15px; font-size: 14px; }
+
+        .dl-bottom-section { grid-template-columns: 1fr; }
+        
+        /* ปุ่มดาวน์โหลดเอกสารบนจอมือถือเล็กสุด ให้บีบตัวอักษรลง */
+        .brochure-text h4 { font-size: 13px; }
+        .brochure-text p { font-size: 11px; margin-top: 5px; }
     }
 </style>
 </head>
@@ -380,8 +410,7 @@
 
 <div class="container">
     
-    <!-- LEFT PANEL -->
-    <div class="left-panel">
+        <div class="left-panel">
         <div class="input-card">
             <h2>คำนวณแพ็กเกจประกัน</h2>
             <div class="form-row">
@@ -433,8 +462,7 @@
             </div>
         </div>
 
-        <!-- AGENT CARD (ดันชิดล่างเสมอ) -->
-        <div class="agent-card-left">
+                <div class="agent-card-left">
             <img src="agent.jpg" alt="ตัวแทนประกัน" class="agent-profile-img" onerror="this.src='https://via.placeholder.com/90/e86614/fff.png?text=Agent';">
             <div class="agent-info">
                 <h4>นฤมล คำใบ <span style="font-weight: 400; font-size:14px;">(ผู้จัดการขาย)</span></h4>
@@ -449,8 +477,7 @@
         </div>
     </div>
 
-    <!-- RIGHT PANEL -->
-    <div class="right-panel">
+        <div class="right-panel">
         <div class="header-right"><h2>สรุปแผนความคุ้มครอง</h2></div>
 
         <div class="plan-card">
@@ -491,11 +518,9 @@
             </table>
         </div>
 
-        <!-- ACTION BUTTONS (4 ปุ่ม ดันชิดล่างสุดเสมอ) -->
-        <div class="action-buttons-wrapper">
+                <div class="action-buttons-wrapper">
             
-            <!-- 0. ปุ่มเปิด ผลประโยชน์เงินคืน (แบบกราฟแท่ง) -->
-            <a href="javascript:void(0)" onclick="openMaturityModal()" class="btn-style btn-maturity">
+                        <a href="javascript:void(0)" onclick="openMaturityModal()" class="btn-style btn-maturity">
                 <div class="brochure-icon"><i class="fa-solid fa-piggy-bank"></i></div>
                 <div class="brochure-text">
                     <h4>ผลประโยชน์เงินคืนเมื่อครบสัญญาอายุ 90 ปี</h4>
@@ -504,8 +529,7 @@
                 <div class="brochure-arrow"><i class="fa-solid fa-chevron-right"></i></div>
             </a>
 
-            <!-- 1. ปุ่มเปิด รายชื่อ 50 โรคร้ายแรง -->
-            <a href="javascript:void(0)" onclick="openDiseaseListModal()" class="btn-style btn-disease">
+                        <a href="javascript:void(0)" onclick="openDiseaseListModal()" class="btn-style btn-disease">
                 <div class="brochure-icon"><i class="fa-solid fa-notes-medical"></i></div>
                 <div class="brochure-text">
                     <h4>รายชื่อ 50 โรคร้ายแรง</h4>
@@ -514,8 +538,7 @@
                 <div class="brochure-arrow"><i class="fa-solid fa-chevron-right"></i></div>
             </a>
 
-            <!-- 2. ปุ่มเปิด Flowchart วงกลม (ผลประโยชน์) -->
-            <a href="javascript:void(0)" onclick="openFlowchartModal()" class="btn-style btn-flowchart">
+                        <a href="javascript:void(0)" onclick="openFlowchartModal()" class="btn-style btn-flowchart">
                 <div class="brochure-icon"><i class="fa-solid fa-sitemap"></i></div>
                 <div class="brochure-text">
                     <h4>การจ่ายผลประโยชน์ 50 โรคร้ายแรง</h4>
@@ -524,8 +547,7 @@
                 <div class="brochure-arrow"><i class="fa-solid fa-chevron-right"></i></div>
             </a>
 
-            <!-- 3. ปุ่มดาวน์โหลดโบรชัวร์ -->
-            <a href="https://www.fwd.co.th/files/v3/assets/blt331c1aa12dcfd37a/blt2ccd182411340333/6944b25cca96fcd9c52ee6f0/TH_Brochure_CI50_Omne.pdf" target="_blank" class="btn-style btn-pdf">
+                        <a href="https://www.fwd.co.th/files/v3/assets/blt331c1aa12dcfd37a/blt2ccd182411340333/6944b25cca96fcd9c52ee6f0/TH_Brochure_CI50_Omne.pdf" target="_blank" class="btn-style btn-pdf">
                 <div class="brochure-icon"><i class="fa-solid fa-download"></i></div>
                 <div class="brochure-text">
                     <h4>ดาวน์โหลดโบรชัวร์ (PDF)</h4>
@@ -555,9 +577,6 @@
 </div>
 
 
-<!-- ============================================== -->
-<!-- MODAL 0: MATURITY BENEFIT 90/20 (รูปแบบกราฟแท่ง) -->
-<!-- ============================================== -->
 <div class="modal-overlay-custom" id="maturityModal">
     <div class="modal-content-custom mat-content">
         <span class="close-info-btn" onclick="closeMaturityModal()">&times;</span>
@@ -565,14 +584,11 @@
         <h2 class="mat-title">ผลประโยชน์และความคุ้มครองชีวิต</h2>
         <p class="mat-subtitle">แผนความคุ้มครองชีวิต 90/20 (ชำระเบี้ย 20 ปี)</p>
         
-        <!-- Bar Chart Section -->
-        <div class="bar-chart-wrapper">
+                <div class="bar-chart-wrapper">
             <div style="display: flex; align-items: flex-end;">
-                <!-- Y-Axis -->
-                <div class="y-axis-label">ความคุ้มครองชีวิต<br><span class="y-axis-sub">(% ทุนประกันภัย)</span></div>
+                                <div class="y-axis-label">ความคุ้มครองชีวิต<br><span class="y-axis-sub">(% ทุนประกันภัย)</span></div>
                 
-                <!-- Main Chart Area -->
-                <div style="flex: 1;">
+                                <div style="flex: 1;">
                     <div class="chart-bar-container">
                         <div class="chart-bar">
                             <div class="bar-txt-pct">100%</div>
@@ -580,8 +596,7 @@
                         </div>
                     </div>
                     
-                    <!-- Timeline X-Axis -->
-                    <div class="x-axis-line">
+                                        <div class="x-axis-line">
                         <div class="x-node node-start">1</div>
                         <div class="x-node node-mid">20</div>
                         <div class="x-node node-end">90</div>
@@ -597,8 +612,7 @@
             </div>
         </div>
 
-        <!-- Financial Summary Data -->
-        <div class="fin-summary-row">
+                <div class="fin-summary-row">
             <div class="fin-box">
                 <div class="fin-label"><i class="fa-solid fa-coins"></i> จำนวนเบี้ยสัญญาหลัก ปีละ</div>
                 <div class="fin-val" id="mat-annual-premium">-</div>
@@ -621,9 +635,6 @@
 </div>
 
 
-<!-- ============================================== -->
-<!-- MODAL 1: FLOWCHART การจ่ายผลประโยชน์ (วงกลม) -->
-<!-- ============================================== -->
 <div class="modal-overlay-custom" id="flowchartModal">
     <div class="modal-content-custom flowchart-content">
         <span class="close-info-btn" onclick="closeFlowchartModal()">&times;</span>
@@ -633,8 +644,7 @@
         </h2>
         
         <div class="ig-flowchart">
-            <!-- กรณีที่ 1 -->
-            <div class="ig-case-wrapper">
+                        <div class="ig-case-wrapper">
                 <div class="ig-case-label">กรณีที่ 1 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
                 
                 <div class="ig-step">
@@ -673,11 +683,9 @@
                 </div>
             </div>
 
-            <!-- Divider (หรือ) -->
-            <div class="ig-divider-vertical"><div class="ig-divider-text">หรือ</div></div>
+                        <div class="ig-divider-vertical"><div class="ig-divider-text">หรือ</div></div>
 
-            <!-- กรณีที่ 2 -->
-            <div class="ig-case-wrapper">
+                        <div class="ig-case-wrapper">
                 <div class="ig-case-label">กรณีที่ 2 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
                 
                 <div class="ig-step">
@@ -694,17 +702,13 @@
     </div>
 </div>
 
-<!-- ============================================== -->
-<!-- MODAL 2: รายชื่อโรค 50 โรคร้ายแรง (A4 Landscape) -->
-<!-- ============================================== -->
 <div class="modal-overlay-custom" id="diseaseListModal">
     <div class="modal-content-custom list-content">
         <span class="close-info-btn" onclick="closeDiseaseListModal()">&times;</span>
         
         <h1 class="dl-main-title">รายชื่อโรคที่คุ้มครอง 50 โรคร้ายแรง</h1>
 
-        <!-- ส่วนบน : ระยะเริ่มต้น -->
-        <div class="dl-top-section">
+                <div class="dl-top-section">
             <div class="dl-top-header">
                 <h2 class="dl-section-title">ระยะเริ่มต้น<br>(Early Stage)</h2>
                 <span class="dl-badge-orange">5 โรคร้ายแรง</span>
@@ -725,10 +729,8 @@
 
         <hr class="dl-divider">
 
-        <!-- ส่วนล่าง : แบ่ง 3 คอลัมน์ -->
-        <div class="dl-bottom-section">
-            <!-- คอลัมน์ 1 -->
-            <div>
+                <div class="dl-bottom-section">
+                        <div>
                 <div class="dl-bottom-header-wrapper">
                     <h2 class="dl-section-title">ระยะรุนแรง (Last Stage)</h2>
                     <span class="dl-badge-red">45 โรคร้ายแรง</span>
@@ -762,8 +764,7 @@
                 </ul>
             </div>
 
-            <!-- คอลัมน์ 2 -->
-            <div>
+                        <div>
                 <ul class="dl-ul" style="margin-top: 5px;">
                     <li class="dl-li"><span class="dl-num">12.</span><a class="dl-disease-link" onclick="openDiseaseModal('l12')">เนื้องอกในสมองชนิดที่ไม่ใช่มะเร็ง</a></li>
                     <li class="dl-li"><span class="dl-num">13.</span><a class="dl-disease-link" onclick="openDiseaseModal('l13')">สมองอักเสบจากเชื้อไวรัส</a></li>
@@ -789,8 +790,7 @@
                 </ul>
             </div>
 
-            <!-- คอลัมน์ 3 -->
-            <div>
+                        <div>
                 <div class="dl-category-title no-mt">อื่นๆ</div>
                 <ul class="dl-ul">
                     <li class="dl-li"><span class="dl-num">29.</span><a class="dl-disease-link" onclick="openDiseaseModal('l29')">การสูญเสียการได้ยิน</a></li>
@@ -816,9 +816,6 @@
     </div>
 </div>
 
-<!-- ============================================== -->
-<!-- MODAL 3: DISEASE DETAIL (รายละเอียดเจาะจงของแต่ละโรค) -->
-<!-- ============================================== -->
 <div class="modal-overlay-custom" id="diseaseDetailModal" style="z-index: 3000;">
     <div class="modal-content-custom detail-content">
         <span class="close-info-btn" onclick="closeDiseaseModal()">&times;</span>
@@ -1016,22 +1013,22 @@
         'l26':{ title: '26. ตับอ่อนอักเสบกลับเป็นซ้ำเรื้อรัง', desc: 'ตับอ่อนถูกทำลายเรื้อรัง', cause: 'แอลกอฮอล์ นิ่ว', symptom: 'ปวดท้องแสนสาหัส อาหารไม่ย่อย', treatment: 'งดอาหาร ผ่าตัด', impact: 'ระบบย่อยพัง ผอมแห้ง ขาดสารอาหาร' },
         'l27':{ title: '27. โรคถุงน้ำในไต', desc: 'ถุงน้ำทำลายเนื้อไต', cause: 'พันธุกรรม', symptom: 'ปวดเอว ปัสสาวะเลือด', treatment: 'เจาะน้ำ ฟอกไต', impact: 'ไตวาย' },
         'l28':{ title: '28. ลำไส้อักเสบเป็นแผลรุนแรง', desc: 'ลำไส้ใหญ่เป็นแผลเรื้อรัง', cause: 'ภูมิคุ้มกันผิดปกติ', symptom: 'ถ่ายเป็นเลือด ปวดเกร็ง', treatment: 'ยากดภูมิ ผ่าตัดลำไส้ทิ้ง', impact: 'เสี่ยงลำไส้ทะลุ' },
-        'l29':{ title: '29. สูญเสียการได้ยิน', desc: 'หูหนวกถาวร', cause: 'ยาติดเชื้อ เสียงดัง', symptom: 'ไม่ได้ยินอะไรเลย', treatment: 'ประสาทหูเทียม', impact: 'หูหนวก 100%' },
-        'l30':{ title: '30. สูญเสียความสามารถการพูด', desc: 'เป็นใบ้ถาวร', cause: 'เส้นเสียงพัง สมองพัง', symptom: 'เปล่งเสียงไม่ได้', treatment: 'เครื่องช่วยพูด', impact: 'สื่อสารด้วยเสียงไม่ได้' },
+        'l29':{ title: '29. การสูญเสียการได้ยิน', desc: 'หูหนวกถาวร', cause: 'ยาติดเชื้อ เสียงดัง', symptom: 'ไม่ได้ยินอะไรเลย', treatment: 'ประสาทหูเทียม', impact: 'หูหนวก 100%' },
+        'l30':{ title: '30. การสูญเสียความสามารถการพูด', desc: 'เป็นใบ้ถาวร', cause: 'เส้นเสียงพัง สมองพัง', symptom: 'เปล่งเสียงไม่ได้', treatment: 'เครื่องช่วยพูด', impact: 'สื่อสารด้วยเสียงไม่ได้' },
         'l31':{ title: '31. แผลไหม้ฉกรรจ์', desc: 'ไฟลวกระดับ 3 กินพื้นที่เกิน 20%', cause: 'ไฟไหม้ สารเคมี', symptom: 'ผิวไหม้เกรียม', treatment: 'ปลูกถ่ายผิวหนัง', impact: 'ติดเชื้อ เจ็บปวดทรมานสาหัส' },
         'l32':{ title: '32. อัมพาตแขนหรือขา', desc: 'ขยับแขน/ขาไม่ได้ถาวร >2ข้าง', cause: 'อุบัติเหตุ โรคสมอง', symptom: 'ไม่มีแรง ขยับไม่ได้', treatment: 'กายภาพ', impact: 'เดินไม่ได้ เป็นภาระครอบครัว' },
         'l33':{ title: '33. โรคโปลิโอ', desc: 'ไวรัสทำลายไขสันหลัง', cause: 'ไวรัสโปลิโอ', symptom: 'แขนขาลีบ อ่อนแรง', treatment: 'กายภาพ', impact: 'พิการเดินไม่ได้ถาวร' },
-        'l34':{ title: '34. สูญเสียการดำรงชีพอย่างอิสระ', desc: 'ทำกิจวัตรเองไม่ได้', cause: 'ชรา ป่วยหนัก', symptom: 'กิน อาบน้ำ เองไม่ได้', treatment: 'พยาบาลดูแล', impact: 'ติดเตียง 100%' },
+        'l34':{ title: '34. การสูญเสียการดำรงชีพอย่างอิสระ', desc: 'ทำกิจวัตรเองไม่ได้', cause: 'ชรา ป่วยหนัก', symptom: 'กิน อาบน้ำ เองไม่ได้', treatment: 'พยาบาลดูแล', impact: 'ติดเตียง 100%' },
         'l35':{ title: '35. ตาบอด', desc: 'มืดสนิทสองข้าง', cause: 'เบาหวาน อุบัติเหตุ', symptom: 'มองไม่เห็น', treatment: 'ไม่สามารถรักษาได้', impact: 'โลกมืดมิด' },
-        'l36':{ title: '36. ฉีกขาดของรากประสาทต้นแขน', desc: 'ประสาทคอขาด แขนเป็นอัมพาต', cause: 'อุบัติเหตุดึงรั้ง', symptom: 'แขนห้อย ไม่รู้สึก', treatment: 'ผ่าตัดต่อเส้นประสาท', impact: 'แขนใช้งานไม่ได้ถาวร' },
+        'l36':{ title: '36. การฉีกขาดของรากประสาทต้นแขน', desc: 'ประสาทคอขาด แขนเป็นอัมพาต', cause: 'อุบัติเหตุดึงรั้ง', symptom: 'แขนห้อย ไม่รู้สึก', treatment: 'ผ่าตัดต่อเส้นประสาท', impact: 'แขนใช้งานไม่ได้ถาวร' },
         'l37':{ title: '37. โรคหนังแข็งชนิดลุกลาม', desc: 'ผิวหนังและอวัยวะแข็งตัว', cause: 'ภูมิคุ้มกันผิดปกติสร้างพังผืด', symptom: 'ผิวตึง กลืนลำบาก', treatment: 'ยากดภูมิ', impact: 'ขยับตัวไม่ได้ ปอดแข็ง' },
         'l38':{ title: '38. โรคเท้าช้าง', desc: 'ท่อน้ำเหลืองตัน ขาบวมโต', cause: 'พยาธิ', symptom: 'ขาบวมใหญ่ผิวขรุขระ', treatment: 'ยา ผ่าตัด', impact: 'เดินลำบาก' },
-        'l39':{ title: '39. ทุพพลภาพถาวรสิ้นเชิง', desc: 'ทำงานหาเงินไม่ได้ถาวร', cause: 'ป่วยหนัก อุบัติเหตุ', symptom: 'ทุพพลภาพ', treatment: 'กายภาพ', impact: 'ขาดรายได้ถาวร' },
-        'l40':{ title: '40. โลหิตจางจากไขกระดูกไม่สร้างเม็ดเลือด', desc: 'ไขกระดูกพัง', cause: 'สารเคมี ยา', symptom: 'ซีด เลือดออกง่าย', treatment: 'เปลี่ยนไขกระดูก', impact: 'ภูมิคุ้มกันตก เสี่ยงเลือดไหลตาย' },
-        'l41':{ title: '41. เนื้อเยื่อพังผืดอักเสบติดเชื้อ/เน่า', desc: 'แบคทีเรียกินเนื้อ', cause: 'ติดเชื้อแผล', symptom: 'แผลลามรวดเร็ว ดำคล้ำ', treatment: 'ผ่าตัดเฉือนเนื้อ', impact: 'ต้องตัดแขนขาทิ้ง' },
-        'l42':{ title: '42. แรงดันหลอดเลือดปอดสูงปฐมภูมิ', desc: 'หัวใจขวาทำงานหนัก', cause: 'เส้นเลือดปอดตีบเอง', symptom: 'หอบ หน้ามืด', treatment: 'ยาขยายหลอดเลือดปอด', impact: 'หัวใจวาย' },
+        'l39':{ title: '39. การทุพพลภาพถาวรสิ้นเชิง (ก่อนอายุ 70 ปี)', desc: 'ทำงานหาเงินไม่ได้ถาวร', cause: 'ป่วยหนัก อุบัติเหตุ', symptom: 'ทุพพลภาพ', treatment: 'กายภาพ', impact: 'ขาดรายได้ถาวร' },
+        'l40':{ title: '40. โรคโลหิตจางจากไขกระดูกไม่สร้างเม็ดโลหิต', desc: 'ไขกระดูกพัง', cause: 'สารเคมี ยา', symptom: 'ซีด เลือดออกง่าย', treatment: 'เปลี่ยนไขกระดูก', impact: 'ภูมิคุ้มกันตก เสี่ยงเลือดไหลตาย' },
+        'l41':{ title: '41. โรคเนื้อเยื่อพังผืดอักเสบติดเชื้อและเป็นเนื้อตาย', desc: 'แบคทีเรียกินเนื้อ', cause: 'ติดเชื้อแผล', symptom: 'แผลลามรวดเร็ว ดำคล้ำ', treatment: 'ผ่าตัดเฉือนเนื้อ', impact: 'ต้องตัดแขนขาทิ้ง' },
+        'l42':{ title: '42. โรคแรงดันในหลอดเลือดแดงปอดสูงแบบปฐมภูมิ', desc: 'หัวใจขวาทำงานหนัก', cause: 'เส้นเลือดปอดตีบเอง', symptom: 'หอบ หน้ามืด', treatment: 'ยาขยายหลอดเลือดปอด', impact: 'หัวใจวาย' },
         'l43':{ title: '43. ภาวะโคม่า', desc: 'หมดสติลึก', cause: 'สมองบาดเจ็บ ขาดออกซิเจน', symptom: 'ไม่รู้สึกตัว', treatment: 'เครื่องช่วยหายใจ', impact: 'เจ้าชายนิทรา' },
-        'l44':{ title: '44. บาดเจ็บศีรษะอย่างรุนแรง', desc: 'สมองกระทบกระเทือนหนัก', cause: 'อุบัติเหตุ', symptom: 'สมองบวม เลือดออก', treatment: 'ผ่าตัดสมอง', impact: 'อัมพาต ความจำเสื่อม' },
+        'l44':{ title: '44. การบาดเจ็บที่ศีรษะอย่างรุนแรง', desc: 'สมองกระทบกระเทือนหนัก', cause: 'อุบัติเหตุ', symptom: 'สมองบวม เลือดออก', treatment: 'ผ่าตัดสมอง', impact: 'อัมพาต ความจำเสื่อม' },
         'l45':{ title: '45. ภาวะอะแพลลิก', desc: 'เป็นผัก หายใจได้แต่ไม่รับรู้', cause: 'สมองขาดออกซิเจนนาน', symptom: 'ลืมตาได้แต่ไม่ตอบสนอง', treatment: 'ประคับประคอง', impact: 'สูญเสียการรับรู้ 100%' }
     };
 
