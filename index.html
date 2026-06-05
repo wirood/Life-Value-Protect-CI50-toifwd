@@ -381,7 +381,7 @@
     .list-content { max-width: 1100px; max-height: 90vh; overflow-y: auto; font-family: 'Sarabun', sans-serif;}
     
     /* --- CSS ส่วนที่เพิ่มใหม่สำหรับการ Capture ให้อยู่ในรูปแบบ PC --- */
-    .dl-action-bar { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); }
+    .dl-action-bar { text-align: center; padding-top: 15px; border-top: 1px solid var(--border-color); }
     .btn-capture { background: var(--line-green); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(6, 199, 85, 0.2); transition: 0.2s; display: inline-flex; align-items: center; gap: 8px;}
     .btn-capture:hover { background: #05a044; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(6, 199, 85, 0.3);}
     .btn-capture i { font-size: 18px; }
@@ -400,6 +400,21 @@
         background: #fff;
         padding: 20px;
         border-radius: 12px;
+    }
+
+    /* Override พิเศษสำหรับ Flowchart Modal ให้ทำงานใน Capture Area */
+    @media (max-width: 1024px) {
+        .capture-area-inner .ig-flowchart { flex-direction: row !important; align-items: stretch !important; gap: 0 !important; }
+        .capture-area-inner .ig-divider-vertical { width: 1px !important; height: auto !important; border-top: none !important; border-left: 1px dashed #d68a27 !important; margin: 0 10px !important;}
+        .capture-area-inner .ig-divider-text { padding: 10px 0 !important; }
+    }
+    @media (max-width: 768px) {
+        .capture-area-inner .ig-case-wrapper { flex-direction: row !important; gap: 10px !important; align-items: flex-start !important; }
+        .capture-area-inner .ig-case-label { margin-top: 35px !important; align-self: auto !important;}
+        .capture-area-inner .ig-arrow-box { margin-top: 25px !important; }
+        .capture-area-inner .ig-arrow-icon { transform: rotate(0deg) !important; }
+        .capture-area-inner .ig-arrow-txt { display: block !important; }
+        .capture-area-inner .ig-equal-icon { margin-top: 30px !important; }
     }
 
     /* สไตล์ดั้งเดิมของรายชื่อโรค */
@@ -758,7 +773,7 @@
 
 <div class="modal-overlay-custom" id="flowchartModal">
     <div class="modal-content-custom flowchart-content" style="padding:0; background:transparent; box-shadow:none;">
-        <div class="ig-fullscreen-inner" id="flowContentInner">
+        <div class="ig-fullscreen-inner" id="flowContentInner" style="padding-bottom: 20px;">
             <span class="close-info-btn" onclick="closeFlowchartModal()">&times;</span>
             
             <div class="fs-toggle-btn" onclick="toggleFlowFullscreen()">
@@ -766,66 +781,77 @@
             </div>
             
             <div class="fs-document-area">
-                <h2 class="ig-main-title" style="margin-top:25px;">
-                    การจ่ายผลประโยชน์ <span id="ig-dynamic-sum" style="color: var(--primary);">2,000,000</span>
-                </h2>
-                 
-                <div class="ig-flowchart">
-                    <div class="ig-case-wrapper">
-                        <div class="ig-case-label">กรณีที่ 1 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
-                     
-                        <div class="ig-step">
-                            <div class="ig-circle ig-c-yellow">
-                                <div class="ig-circle-badge">ระยะ<br>เริ่มต้น</div>
-                                <div class="ig-txt-pay">จ่าย</div>
-                                <div class="ig-txt-pct">20%</div>
-                                <div class="ig-txt-amt" id="flow-early">400,000</div>
+                <div class="capture-area-wrapper">
+                    <div class="capture-area-inner" id="capture-area-flow" style="min-width: 800px; padding: 20px 10px; background: #fdfaf6;">
+                        <h2 class="ig-main-title" style="margin-top:25px;">
+                            การจ่ายผลประโยชน์ <span id="ig-dynamic-sum" style="color: var(--primary);">2,000,000</span>
+                        </h2>
+                         
+                        <div class="ig-flowchart">
+                            <div class="ig-case-wrapper">
+                                <div class="ig-case-label">กรณีที่ 1 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
+                             
+                                <div class="ig-step">
+                                    <div class="ig-circle ig-c-yellow">
+                                        <div class="ig-circle-badge">ระยะ<br>เริ่มต้น</div>
+                                        <div class="ig-txt-pay">จ่าย</div>
+                                        <div class="ig-txt-pct">20%</div>
+                                        <div class="ig-txt-amt" id="flow-early">400,000</div>
+                                    </div>
+                                    <div class="ig-step-desc">เมื่อวินิจฉัยพบ<br>1 ใน 5 โรคร้ายแรง</div>
+                                </div>
+
+                                <div class="ig-arrow-box">
+                                    <div class="ig-arrow-txt">ต่อมา</div>
+                                    <i class="fa-solid fa-arrow-right ig-arrow-icon"></i>
+                                </div>
+
+                                <div class="ig-step">
+                                    <div class="ig-circle ig-c-green">
+                                        <div class="ig-circle-badge">ระยะ<br>รุนแรง</div>
+                                        <div class="ig-txt-pay">จ่าย</div>
+                                        <div class="ig-txt-pct">80%</div>
+                                        <div class="ig-txt-amt" id="flow-last80">1,600,000</div>
+                                    </div>
+                                    <div class="ig-step-desc">เมื่อวินิจฉัยพบ<br>1 ใน 45 โรคร้ายแรง<br>หรือเสียชีวิต</div>
+                                </div>
+
+                                <div class="ig-equal-icon">=</div>
+
+                                <div class="ig-step">
+                                    <div class="ig-circle ig-c-blue">
+                                        <div class="ig-circle-badge" style="top:-10px;">รวมผล<br>ประโยชน์</div>
+                                        <div class="ig-txt-pct" style="margin-top:10px;">100%</div>
+                                        <div class="ig-txt-amt" id="flow-total100-1">2,000,000</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="ig-step-desc">เมื่อวินิจฉัยพบ<br>1 ใน 5 โรคร้ายแรง</div>
-                        </div>
 
-                        <div class="ig-arrow-box">
-                            <div class="ig-arrow-txt">ต่อมา</div>
-                            <i class="fa-solid fa-arrow-right ig-arrow-icon"></i>
-                        </div>
+                            <div class="ig-divider-vertical"><div class="ig-divider-text">หรือ</div></div>
 
-                        <div class="ig-step">
-                            <div class="ig-circle ig-c-green">
-                                <div class="ig-circle-badge">ระยะ<br>รุนแรง</div>
-                                <div class="ig-txt-pay">จ่าย</div>
-                                <div class="ig-txt-pct">80%</div>
-                                <div class="ig-txt-amt" id="flow-last80">1,600,000</div>
+                            <div class="ig-case-wrapper">
+                                <div class="ig-case-label">กรณีที่ 2 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
+                             
+                                <div class="ig-step">
+                                    <div class="ig-circle ig-c-orange">
+                                        <div class="ig-circle-badge" style="top:-10px;">ระยะ<br>รุนแรง</div>
+                                        <div class="ig-txt-pay">จ่าย</div>
+                                        <div class="ig-txt-pct">100%</div>
+                                        <div class="ig-txt-amt" id="flow-total100-2">2,000,000</div>
+                                    </div>
+                                    <div class="ig-step-desc">เมื่อวินิจฉัยพบ 1 ใน 45<br>โรคร้ายแรงหรือเสียชีวิต</div>
+                                </div>
                             </div>
-                            <div class="ig-step-desc">เมื่อวินิจฉัยพบ<br>1 ใน 45 โรคร้ายแรง<br>หรือเสียชีวิต</div>
-                        </div>
-
-                        <div class="ig-equal-icon">=</div>
-
-                        <div class="ig-step">
-                            <div class="ig-circle ig-c-blue">
-                                <div class="ig-circle-badge" style="top:-10px;">รวมผล<br>ประโยชน์</div>
-                                <div class="ig-txt-pct" style="margin-top:10px;">100%</div>
-                                <div class="ig-txt-amt" id="flow-total100-1">2,000,000</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ig-divider-vertical"><div class="ig-divider-text">หรือ</div></div>
-
-                    <div class="ig-case-wrapper">
-                        <div class="ig-case-label">กรณีที่ 2 <i class="fa-solid fa-arrow-right" style="font-size:14px;"></i></div>
-                     
-                        <div class="ig-step">
-                            <div class="ig-circle ig-c-orange">
-                                <div class="ig-circle-badge" style="top:-10px;">ระยะ<br>รุนแรง</div>
-                                <div class="ig-txt-pay">จ่าย</div>
-                                <div class="ig-txt-pct">100%</div>
-                                <div class="ig-txt-amt" id="flow-total100-2">2,000,000</div>
-                            </div>
-                            <div class="ig-step-desc">เมื่อวินิจฉัยพบ 1 ใน 45<br>โรคร้ายแรงหรือเสียชีวิต</div>
                         </div>
                     </div>
                 </div>
+
+                <div class="dl-action-bar" style="border-top: none; padding-top: 10px;">
+                    <button class="btn-capture" id="share-btn-flow" onclick="captureAndShare('capture-area-flow', 'share-btn-flow', 'การจ่ายผลประโยชน์50CI.png')">
+                        <i class="fa-solid fa-camera"></i> บันทึก / แชร์ภาพ
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -836,7 +862,7 @@
         <span class="close-info-btn" onclick="closeDiseaseListModal()">&times;</span>
         
         <div class="capture-area-wrapper">
-            <div class="capture-area-inner" id="capture-area">
+            <div class="capture-area-inner" id="capture-area-list">
                 <h1 class="dl-main-title">รายชื่อโรคที่คุ้มครอง 50 โรคร้ายแรง</h1>
 
                 <div class="dl-top-section">
@@ -948,7 +974,7 @@
         </div>
 
         <div class="dl-action-bar">
-            <button class="btn-capture" id="share-btn" onclick="captureAndShare()">
+            <button class="btn-capture" id="share-btn-list" onclick="captureAndShare('capture-area-list', 'share-btn-list', 'รายชื่อ50โรคร้ายแรง.png')">
                 <i class="fa-solid fa-camera"></i> บันทึก / แชร์ภาพ
             </button>
         </div>
@@ -1156,10 +1182,11 @@
         }
     }
 
-    // --- ฟังก์ชันบันทึกและแชร์รูปภาพที่เพิ่มใหม่ --- //
-    async function captureAndShare() {
-        const element = document.getElementById('capture-area');
-        const btn = document.getElementById('share-btn');
+    // --- ฟังก์ชันบันทึกและแชร์รูปภาพ --- //
+    // เพิ่มการรับ Parameter เพื่อให้ใช้ร่วมกันได้ทุกหน้า
+    async function captureAndShare(elementId, btnId, fileName) {
+        const element = document.getElementById(elementId);
+        const btn = document.getElementById(btnId);
         const originalText = btn.innerHTML;
         
         // แสดงสถานะโหลด
@@ -1178,24 +1205,24 @@
 
             // ดึงไฟล์ Blob สำหรับใช้งาน Share API
             canvas.toBlob(async (blob) => {
-                const file = new File([blob], '50CI_List.png', { type: 'image/png' });
+                const file = new File([blob], fileName, { type: 'image/png' });
 
                 // เช็คว่า Browser รองรับ Web Share API และสามารถแชร์ไฟล์ได้หรือไม่ (ส่วนใหญ่ใช้งานได้บนมือถือ)
                 if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                     try {
                         await navigator.share({
-                            title: 'รายชื่อ 50 โรคร้ายแรง',
-                            text: 'ตารางความคุ้มครอง 50 โรคร้ายแรง แผนประกัน FWD',
+                            title: 'รายละเอียดแผนประกัน',
+                            text: 'แผนประกันเงินออม + 50 โรคร้ายแรง จาก FWD',
                             files: [file]
                         });
                     } catch (e) {
                         console.log('Share canceled or failed', e);
                         // ถ้าแชร์ไม่สำเร็จ (เช่นกดยกเลิก) ก็โหลดเป็นไฟล์แทน
-                        downloadImage(imageURL);
+                        downloadImage(imageURL, fileName);
                     }
                 } else {
                     // สำหรับ PC หรือ Browser ที่ไม่รองรับ ให้โหลดไฟล์ภาพลงเครื่องโดยตรง
-                    downloadImage(imageURL);
+                    downloadImage(imageURL, fileName);
                 }
             }, 'image/png');
 
@@ -1210,10 +1237,10 @@
     }
 
     // ฟังก์ชันช่วยสำหรับการดาวน์โหลดรูปภาพลงเครื่อง
-    function downloadImage(dataUrl) {
+    function downloadImage(dataUrl, fileName) {
         const link = document.createElement('a');
         link.href = dataUrl;
-        link.download = 'รายชื่อ50โรคร้ายแรง.png';
+        link.download = fileName;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
