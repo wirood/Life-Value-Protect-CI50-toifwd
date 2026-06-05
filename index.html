@@ -40,16 +40,27 @@
     .main-banner { max-width: 1100px; margin: 30px auto 15px auto; padding: 0 20px; }
     .main-banner > img { width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: block; }
 
-    /* --- LAYOUT CONTAINER (เสมอล่าง & Balance) --- */
+    /* --- LAYOUT CONTAINER (ปรับให้ตรึง 2 ฝั่งเสมอ) --- */
+    .container-scroll-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 20px;
+    }
+
     .container {
-        max-width: 1100px; margin: 0 auto 40px auto; padding: 0 20px;
-        display: flex; gap: 25px; 
-        align-items: stretch; /* ทำให้กล่องซ้ายขวาสูงเท่ากันเสมอ */
+        max-width: 1100px; 
+        min-width: 950px; /* ล็อกความกว้างขั้นต่ำไม่ให้กล่องตกลงมา */
+        margin: 0 auto 20px auto; 
+        padding: 0 20px;
+        display: flex; 
+        gap: 25px; 
+        align-items: stretch;
     }
 
     /* --- LEFT PANEL --- */
     .left-panel {
-        width: 450px; flex-shrink: 0; 
+        width: 420px; flex-shrink: 0; 
         display: flex; flex-direction: column; 
     }
     .input-card { background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; padding: 20px 25px; margin-bottom: 15px;}
@@ -68,10 +79,45 @@
 
     .sum-insured-box > label { font-weight: 600; color: var(--text-dark); margin-bottom: 10px; display: block; font-size: 15px; }
 
+    /* --- แถบเลือกแผน ปรับให้มีความเด้ง Bouncy แบบ 3D --- */
     .plan-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-    .plan-opt-btn { border: 2px solid var(--primary); border-radius: 8px; padding: 20px 5px 10px 5px; text-align: center; cursor: pointer; background: white; position: relative; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .plan-opt-btn:hover { background: var(--primary-light); }
-    .plan-opt-btn.active { border-color: var(--primary); background: var(--primary); box-shadow: 0 4px 10px rgba(232, 102, 20, 0.25); }
+    .plan-opt-btn { 
+        border: 2px solid var(--primary); 
+        border-radius: 8px; 
+        padding: 20px 5px 10px 5px; 
+        text-align: center; 
+        cursor: pointer; 
+        background: white; 
+        position: relative; 
+        transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center; 
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05); 
+    }
+    .plan-opt-btn:hover { 
+        background: var(--primary-light); 
+        transform: translateY(-4px) scale(1.02); 
+        box-shadow: 0 8px 15px rgba(232, 102, 20, 0.15); 
+        z-index: 10;
+    }
+    .plan-opt-btn:active { 
+        transform: translateY(1px) scale(0.98); 
+        box-shadow: 0 2px 4px rgba(232, 102, 20, 0.1); 
+    }
+    .plan-opt-btn.active { 
+        border-color: var(--primary); 
+        background: var(--primary); 
+        box-shadow: 0 6px 12px rgba(232, 102, 20, 0.3); 
+        transform: scale(1.02); 
+        z-index: 5;
+    }
+    .plan-opt-btn.active:hover { 
+        transform: translateY(-2px) scale(1.04); 
+        background: var(--primary); 
+        box-shadow: 0 8px 15px rgba(232, 102, 20, 0.4); 
+    }
     
     .plan-tag { position: absolute; top: 5px; left: 8px; font-size: 11.5px; font-weight: 700; color: var(--primary); }
     .plan-opt-btn.active .plan-tag { color: rgba(255,255,255,0.9); }
@@ -94,10 +140,10 @@
 
     .error-msg { color: #d32f2f; font-size: 13px; margin-top: 10px; display: none; font-weight: 500; }
     .requirements { margin-top: 15px; border: 1px solid var(--border-color); border-radius: 12px; padding: 15px 20px; background-color: #fafafa; }
-    .requirements h3 { font-size: 15px; display: flex; align-items: center; gap: 8px; color: var(--primary); margin: 0 0 12px 0; }
-    .req-list { list-style: none; padding: 0; margin: 0; font-size: 13.5px; color: var(--text-grey); }
+    .requirements h3 { font-size: 18px; display: flex; align-items: center; gap: 8px; color: var(--primary); margin: 0 0 12px 0; }
+    .req-list { list-style: none; padding: 0; margin: 0; font-size: 14px; color: var(--text-grey); }
     .req-list li { margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; }
-    .req-list i { margin-top: 3px; color: var(--line-green); }
+    .req-list i { margin-top: 4px; color: var(--line-green); }
 
     /* --- AGENT CARD (ดันชิดล่างสุดเสมอ) --- */
     .agent-card-left { 
@@ -112,7 +158,7 @@
     .agent-info .phone { display: inline-block; background: var(--primary-light); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12.5px; margin-top: 4px; text-decoration: none; transition: 0.2s; }
     .agent-info .phone:hover { background: var(--primary); color: white; }
     .agent-qr-container { text-align: center; flex-shrink: 0; }
-    .agent-qr-img { width: 65px; height: 65px; border-radius: 8px; object-fit: contain; border: 1px solid var(--border-color); padding: 4px; background: white; }
+    .agent-qr-img { width: 100px; height: 100px; border-radius: 8px; object-fit: contain; border: 1px solid var(--border-color); padding: 4px; background: white; }
 
     /* --- RIGHT PANEL --- */
     .right-panel { 
@@ -134,15 +180,15 @@
     .detail-val { font-weight: 600; text-align: right; font-size: 15.5px; }
     .breakdown-row { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--text-grey); margin-bottom: 12px; padding-left: 15px;}
     
-    /* Coverage Table (ยืดหยุ่นให้เต็มพื้นที่เพื่อดันปุ่มลงไป) */
+    /* Coverage Table */
     .coverage-table-container { 
         background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(232, 102, 20, 0.1); 
         overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 15px;
-        flex: 1; /* <-- สำคัญ: ทำให้ตารางขยายตัวเต็มที่ */
+        flex: 1; 
         display: flex; flex-direction: column;
     }
     .coverage-table-header { background: var(--primary); color: white; padding: 10px 20px; font-weight: 600; font-size: 15px; }
-    .coverage-table { width: 100%; border-collapse: collapse; font-size: 13.5px; white-space: nowrap; height: 100%;} /* height 100% ทำให้ cell ขยาย */
+    .coverage-table { width: 100%; border-collapse: collapse; font-size: 13.5px; white-space: nowrap; height: 100%;}
     .coverage-table th, .coverage-table td { padding: 12px 20px; text-align: right; border-bottom: 1px solid var(--border-color); }
     .coverage-table td:first-child { text-align: left; white-space: normal; }
     .table-section-1 { background-color: #f8992e; color: white; font-weight: 600; }
@@ -201,7 +247,7 @@
     .close-info-btn { position: absolute; top: 12px; right: 18px; font-size: 28px; color: #999; cursor: pointer; line-height: 1; font-family: 'Prompt', sans-serif; transition: 0.2s;}
     .close-info-btn:hover { color: var(--primary); transform: scale(1.1);}
 
-    /* 1. Bar Chart Modal (Maturity 90/20) - ปรับปรุงใหม่เป็นกราฟแท่ง */
+    /* 1. Bar Chart Modal (Maturity 90/20) */
     .mat-content { max-width: 850px; background: #fdfaf6; }
     .mat-title { color: #d68a27; font-size: 26px; font-weight: bold; margin: 0 0 5px 0;}
     .mat-subtitle { font-size: 15px; color: #666; margin-bottom: 25px;}
@@ -319,30 +365,15 @@
     .sticky-price { font-size: 28px; font-weight: bold; color: var(--primary);}
     .sticky-btn { background: var(--line-green); color: white; padding: 12px 30px; border-radius: 8px; font-weight: 600; font-family: 'Prompt'; font-size: 16px; cursor: pointer; border: none;}
 
-    /* --- RESPONSIVE (ปรับแก้ใหม่ ลดความยาวแบบลูกชิ้น) --- */
+    /* --- RESPONSIVE เฉพาะส่วน Modal ให้อ่านง่าย --- */
     @media (max-width: 1024px) {
-        /* สำหรับหน้าจอ Tablet แนวนอน ให้แบ่งซ้ายขวาแบบ 45% / 55% แทนการพับตกลงมา */
-        .container { flex-direction: row; flex-wrap: wrap; }
-        .left-panel { width: 45%; flex: auto; }
-        .right-panel { width: 50%; flex: auto; }
-
-        /* ปุ่มเมนูทั้ง 4 เปลี่ยนให้เป็น Grid 2x2 คอลัมน์ ไม่ให้เรียงยาวลงไปด้านล่าง */
-        .action-buttons-wrapper { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .btn-style { flex-direction: column; text-align: center; justify-content: center; padding: 15px 10px; }
-        .btn-style .brochure-icon { margin: 0 auto 10px auto; }
-        .btn-style .brochure-text { margin-left: 0; }
-        .btn-style .brochure-arrow { display: none; } /* ซ่อนลูกศรออกเพื่อประหยัดพื้นที่บนจอเล็ก */
-
         .ig-flowchart { flex-direction: column; align-items: center; gap: 15px;}
         .ig-divider-vertical { width: 100%; height: 1px; border-left: none; border-top: 1px dashed #d68a27; margin: 15px 0;}
         .ig-divider-text { padding: 0 10px; }
     }
 
     @media (max-width: 850px) {
-        /* บังคับพับ 100% เมื่อจอแคบกว่า 850px (เช่น iPad แนวตั้ง) */
-        .container { flex-direction: column; align-items: stretch; }
-        .left-panel, .right-panel { width: 100%; }
-        .dl-bottom-section { grid-template-columns: 1fr 1fr; } /* รายการ 50 โรค จัดเป็น 2 คอลัมน์ */
+        .dl-bottom-section { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 768px) {
@@ -353,40 +384,16 @@
         .ig-arrow-txt { display: none; }
         .ig-equal-icon { margin-top: 0; }
         
-        /* สรุปผลประโยชน์กราฟแท่ง จัดเป็น Grid 2 อันบน 1 อันล่าง */
-        .fin-summary-row { flex-direction: row; flex-wrap: wrap; gap: 10px;}
-        .fin-box { flex: 1 1 45%; } 
-        .fin-box.highlight { flex: 1 1 100%; }
-
         .dl-top-section { flex-direction: column; align-items: stretch; }
         .dl-top-header, .dl-top-list, .dl-top-image { flex: auto; padding-right: 0;}
         .dl-top-image { order: -1; }
     }
 
     @media (max-width: 600px) {
-        .plan-options { gap: 8px; }
-        .plan-opt-btn { padding: 18px 5px 8px 5px; }
-        .slider-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-        .slider-input-wrapper { width: 100%; }
-        .plan-header { flex-direction: column; gap: 10px; }
-        .plan-price-display { text-align: left; }
-        .coverage-table-container { overflow-x: auto; }
-
-        /* บังคับให้ Agent Card เป็นแนวนอนเสมอเพื่อไม่ให้จอกินพื้นที่แนวตั้งมากไป */
-        .agent-card-left { flex-direction: row; text-align: left; align-items: center; padding: 12px 15px; }
-        .agent-profile-img { width: 55px; height: 55px; }
-        .agent-info h4 { font-size: 15px; }
-        .agent-qr-img { width: 50px; height: 50px; }
-        .agent-qr-container { margin: 0; margin-left: auto; }
-        
         .modal-content-custom { padding: 20px; }
         .mat-title { font-size: 20px; line-height: 1.3;}
         .ig-main-title { font-size: 22px; text-align: center; line-height: 1.4;}
         .dl-main-title { font-size: 22px; text-align: center; line-height: 1.4;}
-
-        .chart-bar-container { width: 90%; }
-        .x-lbl { font-size: 10px; }
-        .premium-period span { font-size: 10px;}
 
         .sticky-content { padding: 0 15px; }
         .sticky-avatar { display: none; }
@@ -395,10 +402,6 @@
         .sticky-btn { padding: 10px 15px; font-size: 14px; }
 
         .dl-bottom-section { grid-template-columns: 1fr; }
-        
-        /* ปุ่มดาวน์โหลดเอกสารบนจอมือถือเล็กสุด ให้บีบตัวอักษรลง */
-        .brochure-text h4 { font-size: 13px; }
-        .brochure-text p { font-size: 11px; margin-top: 5px; }
     }
 </style>
 </head>
@@ -408,154 +411,156 @@
     <img src="image.webp" alt="แผนประกันเงินออม + 50 โรคร้ายแรง" onerror="this.src='https://via.placeholder.com/1100x400/e86614/fff.png?text=Savings+Plus+50CI';">
 </div>
 
-<div class="container">
-    
-        <div class="left-panel">
-        <div class="input-card">
-            <h2>คำนวณแพ็กเกจประกัน</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>เพศ</label>
-                    <div class="gender-select">
-                        <button class="gender-btn active" id="btn-male" onclick="setGender('male')">👨 ชาย</button>
-                        <button class="gender-btn" id="btn-female" onclick="setGender('female')">👩 หญิง</button>
+<div class="container-scroll-wrapper">
+    <div class="container">
+        
+            <div class="left-panel">
+            <div class="input-card">
+                <h2>คำนวณแพ็กเกจประกัน</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>เพศ</label>
+                        <div class="gender-select">
+                            <button class="gender-btn active" id="btn-male" onclick="setGender('male')">👨 ชาย</button>
+                            <button class="gender-btn" id="btn-female" onclick="setGender('female')">👩 หญิง</button>
+                        </div>
+                    </div>
+                    <div class="form-group" style="flex: 0.6;">
+                        <label>อายุ (ปี)</label>
+                        <input type="number" id="age-input" value="30" min="16" max="65" oninput="calculate()">
                     </div>
                 </div>
-                <div class="form-group" style="flex: 0.6;">
-                    <label>อายุ (ปี)</label>
-                    <input type="number" id="age-input" value="30" min="16" max="65" oninput="calculate()">
+
+                <div class="sum-insured-box">
+                    <label>เลือกแผนสำเร็จรูป หรือ ปรับแต่งเอง</label>
+                    <div class="plan-options">
+                        <div class="plan-opt-btn" id="plan-1" onclick="selectPlan(1)"><span class="plan-tag">แผน S</span><div class="plan-name">1.2 ล้าน</div><div class="plan-desc">เงินออม 2 แสน<br>50 โรคร้าย 1 ล้าน</div></div>
+                        <div class="plan-opt-btn active" id="plan-2" onclick="selectPlan(2)"><span class="plan-tag">แผน M</span><div class="pop-badge">ขายดี</div><div class="plan-name">2.2 ล้าน</div><div class="plan-desc">เงินออม 2 แสน<br>50 โรคร้าย 2 ล้าน</div></div>
+                        <div class="plan-opt-btn" id="plan-3" onclick="selectPlan(3)"><span class="plan-tag">แผน L</span><div class="plan-name">3.2 ล้าน</div><div class="plan-desc">เงินออม 2 แสน<br>50 โรคร้าย 3 ล้าน</div></div>
+                        <div class="plan-opt-btn" id="plan-4" onclick="selectPlan(4)"><span class="plan-tag">แผน XL</span><div class="plan-name">5.2 ล้าน</div><div class="plan-desc">เงินออม 2 แสน<br>50 โรคร้าย 5 ล้าน</div></div>
+                        <div class="plan-opt-btn full-width" id="plan-5" onclick="selectPlan(5)"><span class="plan-tag">แผน XXL</span><div class="plan-name">10.2 ล้าน</div><div class="plan-desc">เงินออม 2 แสน<br>50 โรคร้าย 10 ล้าน</div></div>
+                    </div>
+
+                    <div class="custom-sliders-box">
+                        <div class="slider-group">
+                            <div class="slider-header"><span class="slider-label">1. ทุนประกันชีวิตหลัก</span><div class="slider-input-wrapper"><input type="text" id="main-display-input" onchange="handleMainManualInput(this.value)"></div></div>
+                            <input type="range" id="main-slider" min="200000" max="10000000" step="100000" oninput="handleMainSlider(this.value)">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-header"><span class="slider-label">2. ทุนประกัน 50 โรคร้ายแรง</span><div class="slider-input-wrapper"><input type="text" id="ci-display-input" onchange="handleCIManualInput(this.value)"></div></div>
+                            <input type="range" id="ci-slider" min="500000" max="10000000" step="100000" oninput="handleCISlider(this.value)">
+                        </div>
+                    </div>
+                    <div id="sum-error" class="error-msg"></div>
+                </div>
+
+                <div class="requirements">
+                    <h3><i class="fa-solid fa-shield-halved"></i> จุดเด่นแพ็กเกจ</h3>
+                    <ul class="req-list">
+                        <li><i class="fa-solid fa-check"></i> เสียชีวิตทุกกรณี รวมอุบัติเหตุ</li>
+                        <li><i class="fa-solid fa-check"></i> เงินออมเพื่อครอบครัว (เบี้ยคงที่)</li>
+                        <li><i class="fa-solid fa-check"></i> คุ้มครองครอบคลุม 50 โรคร้ายแรง (เบี้ยปรับทุกปี)</li>
+                        <li><i class="fa-solid fa-check"></i> จ่ายเงินก้อนทันทีเมื่อตรวจพบ</li>
+                        <li><i class="fa-solid fa-check"></i> ลดหย่อนภาษีได้สูงสุด 100,000 บาท</li>
+                    </ul>
                 </div>
             </div>
 
-            <div class="sum-insured-box">
-                <label>เลือกแผนสำเร็จรูป หรือ ปรับแต่งเอง</label>
-                <div class="plan-options">
-                    <div class="plan-opt-btn" id="plan-1" onclick="selectPlan(1)"><span class="plan-tag">แผน S</span><div class="plan-name">1.2 ล้าน</div><div class="plan-desc">เงินออม 2 แสน<br>50 โรคร้าย 1 ล้าน</div></div>
-                    <div class="plan-opt-btn active" id="plan-2" onclick="selectPlan(2)"><span class="plan-tag">แผน M</span><div class="pop-badge">ขายดี</div><div class="plan-name">2.2 ล้าน</div><div class="plan-desc">เงินออม 2 แสน<br>50 โรคร้าย 2 ล้าน</div></div>
-                    <div class="plan-opt-btn" id="plan-3" onclick="selectPlan(3)"><span class="plan-tag">แผน L</span><div class="plan-name">3.2 ล้าน</div><div class="plan-desc">เงินออม 2 แสน<br>50 โรคร้าย 3 ล้าน</div></div>
-                    <div class="plan-opt-btn" id="plan-4" onclick="selectPlan(4)"><span class="plan-tag">แผน XL</span><div class="plan-name">5.2 ล้าน</div><div class="plan-desc">เงินออม 2 แสน<br>50 โรคร้าย 5 ล้าน</div></div>
-                    <div class="plan-opt-btn full-width" id="plan-5" onclick="selectPlan(5)"><span class="plan-tag">แผน XXL</span><div class="plan-name">10.2 ล้าน</div><div class="plan-desc">เงินออม 2 แสน<br>50 โรคร้าย 10 ล้าน</div></div>
+                    <div class="agent-card-left">
+                <img src="agent.jpg" alt="ตัวแทนประกัน" class="agent-profile-img" onerror="this.src='https://via.placeholder.com/90/e86614/fff.png?text=Agent';">
+                <div class="agent-info">
+                    <h4>นฤมล คำใบ <span style="font-weight: 400; font-size:14px;">(ผู้จัดการขาย)</span></h4>
+                    <p>ใบอนุญาตตัวแทน: 6901010926</p>
+                    <p style="color: var(--primary);">ประสบการณ์ธุรกิจ <span id="experience-text"></span></p>
+                    <a href="tel:0869017235" class="phone"><i class="fa fa-phone"></i> 086-901-7235</a>
                 </div>
-
-                <div class="custom-sliders-box">
-                    <div class="slider-group">
-                        <div class="slider-header"><span class="slider-label">1. ทุนประกันชีวิตหลัก</span><div class="slider-input-wrapper"><input type="text" id="main-display-input" onchange="handleMainManualInput(this.value)"></div></div>
-                        <input type="range" id="main-slider" min="200000" max="10000000" step="100000" oninput="handleMainSlider(this.value)">
-                    </div>
-                    <div class="slider-group">
-                        <div class="slider-header"><span class="slider-label">2. ทุนประกัน 50 โรคร้ายแรง</span><div class="slider-input-wrapper"><input type="text" id="ci-display-input" onchange="handleCIManualInput(this.value)"></div></div>
-                        <input type="range" id="ci-slider" min="500000" max="10000000" step="100000" oninput="handleCISlider(this.value)">
-                    </div>
+                <div class="agent-qr-container">
+                    <img src="line-qr.png" alt="LINE QR" class="agent-qr-img" onerror="this.src='https://via.placeholder.com/80/fcf9f5/333.png?text=QR';">
+                    <div style="font-size: 11px; color: var(--text-grey); margin-top: 5px;">สแกนแอดไลน์</div>
                 </div>
-                <div id="sum-error" class="error-msg"></div>
-            </div>
-
-            <div class="requirements">
-                <h3><i class="fa-solid fa-shield-halved"></i> จุดเด่นแพ็กเกจ</h3>
-                <ul class="req-list">
-                    <li><i class="fa-solid fa-check"></i> เสียชีวิตทุกกรณี รวมอุบัติเหตุ</li>
-                    <li><i class="fa-solid fa-check"></i> เงินออมเพื่อครอบครัว (เบี้ยคงที่)</li>
-                    <li><i class="fa-solid fa-check"></i> คุ้มครองครอบคลุม 50 โรคร้ายแรง (เบี้ยปรับทุกปี)</li>
-                    <li><i class="fa-solid fa-check"></i> จ่ายเงินก้อนทันทีเมื่อตรวจพบ</li>
-                    <li><i class="fa-solid fa-check"></i> ลดหย่อนภาษีได้สูงสุด 100,000 บาท</li>
-                </ul>
             </div>
         </div>
 
-                <div class="agent-card-left">
-            <img src="agent.jpg" alt="ตัวแทนประกัน" class="agent-profile-img" onerror="this.src='https://via.placeholder.com/90/e86614/fff.png?text=Agent';">
-            <div class="agent-info">
-                <h4>นฤมล คำใบ <span style="font-weight: 400; font-size:14px;">(ผู้จัดการขาย)</span></h4>
-                <p>ใบอนุญาตตัวแทน: 6901010926</p>
-                <p style="color: var(--primary);">ประสบการณ์ธุรกิจ <span id="experience-text"></span></p>
-                <a href="tel:0869017235" class="phone"><i class="fa fa-phone"></i> 086-901-7235</a>
-            </div>
-            <div class="agent-qr-container">
-                <img src="line-qr.png" alt="LINE QR" class="agent-qr-img" onerror="this.src='https://via.placeholder.com/80/fcf9f5/333.png?text=QR';">
-                <div style="font-size: 11px; color: var(--text-grey); margin-top: 5px;">สแกนแอดไลน์</div>
-            </div>
-        </div>
-    </div>
+            <div class="right-panel">
+            <div class="header-right"><h2>สรุปแผนความคุ้มครอง</h2></div>
 
-        <div class="right-panel">
-        <div class="header-right"><h2>สรุปแผนความคุ้มครอง</h2></div>
-
-        <div class="plan-card">
-            <div class="plan-header">
-                <div class="plan-title">
-                    <h3>แผนประกันเงินออม + 50 โรคร้ายแรง</h3>
-                    <p id="display-plan-sub">แผนคุ้มครองรวม 2.2 ล้านบาท</p>
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-title">
+                        <h3>แผนประกันเงินออม + 50 โรคร้ายแรง</h3>
+                        <p id="display-plan-sub">แผนคุ้มครองรวม 2.2 ล้านบาท</p>
+                    </div>
+                    <div class="plan-price-display">
+                        <div style="font-size:13px; color:#666;">เบี้ยรวมต่อปี</div>
+                        <span class="price-amount" id="total-price">-</span> <span style="font-size: 15px;">บาท</span>
+                    </div>
                 </div>
-                <div class="plan-price-display">
-                    <div style="font-size:13px; color:#666;">เบี้ยรวมต่อปี</div>
-                    <span class="price-amount" id="total-price">-</span> <span style="font-size: 15px;">บาท</span>
+                <div class="plan-details">
+                    <div class="detail-row"><span>1. สัญญาหลัก เงินออม (ตลอดชีพ)</span><span class="detail-val" id="main-price">-</span></div>
+                    <div class="breakdown-row">ทุนประกัน <span id="display-main-sum">200,000</span> บาท</div>
+                    <div class="detail-row" style="margin-top:10px;"><span>2. ประกัน 50 โรคร้ายแรง</span><span class="detail-val" id="ci-price">-</span></div>
+                    <div class="breakdown-row" style="margin-bottom: 0;">ทุนประกัน <span id="display-ci-sum">2,000,000</span> บาท</div>
                 </div>
             </div>
-            <div class="plan-details">
-                <div class="detail-row"><span>1. สัญญาหลัก เงินออม (ตลอดชีพ)</span><span class="detail-val" id="main-price">-</span></div>
-                <div class="breakdown-row">ทุนประกัน <span id="display-main-sum">200,000</span> บาท</div>
-                <div class="detail-row" style="margin-top:10px;"><span>2. ประกัน 50 โรคร้ายแรง</span><span class="detail-val" id="ci-price">-</span></div>
-                <div class="breakdown-row" style="margin-bottom: 0;">ทุนประกัน <span id="display-ci-sum">2,000,000</span> บาท</div>
-            </div>
-        </div>
 
-        <div class="coverage-table-container">
-            <div class="coverage-table-header">ตารางความคุ้มครอง (หน่วย: บาท)</div>
-            <table class="coverage-table">
-                <tr class="table-section-1"><td colspan="2">1. ผลประโยชน์โรคร้ายแรง</td></tr>
-                <tr><td><strong>1.1 ระยะเริ่มต้น (Early Stage) 5 โรค</strong></td><td id="tbl-early-stage" style="font-weight: 600; color: var(--primary);">-</td></tr>
-                <tr style="background:#fafafa;"><td colspan="2"><strong>1.2 ระยะรุนแรง (Last Stage) 45 โรค</strong></td></tr>
-                <tr style="background:#fafafa;"><td class="td-bullet">• กรณี<span class="td-highlight-text">ยังไม่มี</span>การจ่ายระยะเริ่มต้น</td><td id="tbl-last-stage-1" style="font-weight: 600;">-</td></tr>
-                <tr style="background:#fafafa;"><td class="td-bullet">• กรณี<span class="td-highlight-text">มีการจ่าย</span>ระยะเริ่มต้นแล้ว</td><td id="tbl-last-stage-2" style="font-weight: 600;">-</td></tr>
+            <div class="coverage-table-container">
+                <div class="coverage-table-header">ตารางความคุ้มครอง (หน่วย: บาท)</div>
+                <table class="coverage-table">
+                    <tr class="table-section-1"><td colspan="2">1. ผลประโยชน์โรคร้ายแรง</td></tr>
+                    <tr><td><strong>1.1 ระยะเริ่มต้น (Early Stage) 5 โรค</strong></td><td id="tbl-early-stage" style="font-weight: 600; color: var(--primary);">-</td></tr>
+                    <tr style="background:#fafafa;"><td colspan="2"><strong>1.2 ระยะรุนแรง (Last Stage) 45 โรค</strong></td></tr>
+                    <tr style="background:#fafafa;"><td class="td-bullet">• กรณี<span class="td-highlight-text">ยังไม่มี</span>การจ่ายระยะเริ่มต้น</td><td id="tbl-last-stage-1" style="font-weight: 600;">-</td></tr>
+                    <tr style="background:#fafafa;"><td class="td-bullet">• กรณี<span class="td-highlight-text">มีการจ่าย</span>ระยะเริ่มต้นแล้ว</td><td id="tbl-last-stage-2" style="font-weight: 600;">-</td></tr>
+                    
+                    <tr class="table-section-2"><td colspan="2">2. ผลประโยชน์เสียชีวิต</td></tr>
+                    <tr><td class="td-bullet">• กรณี<span class="td-highlight-text">ยังไม่มี</span>การจ่ายโรคร้ายระยะเริ่มต้น</td><td id="tbl-death-1" style="font-weight: 600;">-</td></tr>
+                    <tr><td class="td-bullet">• กรณี<span class="td-highlight-text">มีการจ่าย</span>โรคร้ายระยะเริ่มต้นแล้ว</td><td id="tbl-death-2" style="font-weight: 600;">-</td></tr>
+                    <tr><td class="td-bullet">• กรณี<span class="td-highlight-text">มีการจ่าย</span>โรคร้ายระยะรุนแรงแล้ว</td><td id="tbl-death-3" style="font-weight: 600;">-</td></tr>
+
+                    <tr class="table-section-3"><td colspan="2">3. ผลประโยชน์กรณีมีชีวิตอยู่</td></tr>
+                    <tr><td style="padding-left: 20px;">กรณีมีชีวิตอยู่ครบกำหนดสัญญา</td><td id="tbl-maturity" style="font-weight: 600;">-</td></tr>
+                </table>
+            </div>
+
+                    <div class="action-buttons-wrapper">
                 
-                <tr class="table-section-2"><td colspan="2">2. ผลประโยชน์เสียชีวิต</td></tr>
-                <tr><td class="td-bullet">• กรณี<span class="td-highlight-text">ยังไม่มี</span>การจ่ายโรคร้ายระยะเริ่มต้น</td><td id="tbl-death-1" style="font-weight: 600;">-</td></tr>
-                <tr><td class="td-bullet">• กรณี<span class="td-highlight-text">มีการจ่าย</span>โรคร้ายระยะเริ่มต้นแล้ว</td><td id="tbl-death-2" style="font-weight: 600;">-</td></tr>
-                <tr><td class="td-bullet">• กรณี<span class="td-highlight-text">มีการจ่าย</span>โรคร้ายระยะรุนแรงแล้ว</td><td id="tbl-death-3" style="font-weight: 600;">-</td></tr>
+                            <a href="javascript:void(0)" onclick="openMaturityModal()" class="btn-style btn-maturity">
+                    <div class="brochure-icon"><i class="fa-solid fa-piggy-bank"></i></div>
+                    <div class="brochure-text">
+                        <h4>ผลประโยชน์เงินคืนเมื่อครบสัญญาอายุ 90 ปี</h4>
+                        <p>เฉพาะระยะเวลาการชำระเบี้ยประกัน 20 ปีเท่านั้น</p>
+                    </div>
+                    <div class="brochure-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                </a>
 
-                <tr class="table-section-3"><td colspan="2">3. ผลประโยชน์กรณีมีชีวิตอยู่</td></tr>
-                <tr><td style="padding-left: 20px;">กรณีมีชีวิตอยู่ครบกำหนดสัญญา</td><td id="tbl-maturity" style="font-weight: 600;">-</td></tr>
-            </table>
-        </div>
+                            <a href="javascript:void(0)" onclick="openDiseaseListModal()" class="btn-style btn-disease">
+                    <div class="brochure-icon"><i class="fa-solid fa-notes-medical"></i></div>
+                    <div class="brochure-text">
+                        <h4>รายชื่อ 50 โรคร้ายแรง</h4>
+                        <p>คลิกเพื่อดูรายละเอียดโรคที่คุ้มครองทั้งหมด</p>
+                    </div>
+                    <div class="brochure-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                </a>
 
-                <div class="action-buttons-wrapper">
-            
-                        <a href="javascript:void(0)" onclick="openMaturityModal()" class="btn-style btn-maturity">
-                <div class="brochure-icon"><i class="fa-solid fa-piggy-bank"></i></div>
-                <div class="brochure-text">
-                    <h4>ผลประโยชน์เงินคืนเมื่อครบสัญญาอายุ 90 ปี</h4>
-                    <p>เฉพาะระยะเวลาการชำระเบี้ยประกัน 20 ปีเท่านั้น</p>
-                </div>
-                <div class="brochure-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-            </a>
+                            <a href="javascript:void(0)" onclick="openFlowchartModal()" class="btn-style btn-flowchart">
+                    <div class="brochure-icon"><i class="fa-solid fa-sitemap"></i></div>
+                    <div class="brochure-text">
+                        <h4>การจ่ายผลประโยชน์ 50 โรคร้ายแรง</h4>
+                        <p>คลิกเพื่อดูรูปแบบการจ่ายเงินกรณีตรวจพบโรคร้ายแรง</p>
+                    </div>
+                    <div class="brochure-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                </a>
 
-                        <a href="javascript:void(0)" onclick="openDiseaseListModal()" class="btn-style btn-disease">
-                <div class="brochure-icon"><i class="fa-solid fa-notes-medical"></i></div>
-                <div class="brochure-text">
-                    <h4>รายชื่อ 50 โรคร้ายแรง</h4>
-                    <p>คลิกเพื่อดูรายละเอียดโรคที่คุ้มครองทั้งหมด</p>
-                </div>
-                <div class="brochure-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-            </a>
+                            <a href="https://www.fwd.co.th/files/v3/assets/blt331c1aa12dcfd37a/blt2ccd182411340333/6944b25cca96fcd9c52ee6f0/TH_Brochure_CI50_Omne.pdf" target="_blank" class="btn-style btn-pdf">
+                    <div class="brochure-icon"><i class="fa-solid fa-download"></i></div>
+                    <div class="brochure-text">
+                        <h4>ดาวน์โหลดโบรชัวร์ (PDF)</h4>
+                        <p>อ่านรายละเอียดแผนประกัน CI50 เพิ่มเติม</p>
+                    </div>
+                    <div class="brochure-arrow"><i class="fa-solid fa-arrow-down"></i></div>
+                </a>
 
-                        <a href="javascript:void(0)" onclick="openFlowchartModal()" class="btn-style btn-flowchart">
-                <div class="brochure-icon"><i class="fa-solid fa-sitemap"></i></div>
-                <div class="brochure-text">
-                    <h4>การจ่ายผลประโยชน์ 50 โรคร้ายแรง</h4>
-                    <p>คลิกเพื่อดูรูปแบบการจ่ายเงินกรณีตรวจพบโรคร้ายแรง</p>
-                </div>
-                <div class="brochure-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-            </a>
-
-                        <a href="https://www.fwd.co.th/files/v3/assets/blt331c1aa12dcfd37a/blt2ccd182411340333/6944b25cca96fcd9c52ee6f0/TH_Brochure_CI50_Omne.pdf" target="_blank" class="btn-style btn-pdf">
-                <div class="brochure-icon"><i class="fa-solid fa-download"></i></div>
-                <div class="brochure-text">
-                    <h4>ดาวน์โหลดโบรชัวร์ (PDF)</h4>
-                    <p>อ่านรายละเอียดแผนประกัน CI50 เพิ่มเติม</p>
-                </div>
-                <div class="brochure-arrow"><i class="fa-solid fa-arrow-down"></i></div>
-            </a>
-
+            </div>
         </div>
     </div>
 </div>
@@ -585,28 +590,30 @@
         <p class="mat-subtitle">แผนความคุ้มครองชีวิต 90/20 (ชำระเบี้ย 20 ปี)</p>
         
                 <div class="bar-chart-wrapper">
-            <div style="display: flex; align-items: flex-end;">
-                                <div class="y-axis-label">ความคุ้มครองชีวิต<br><span class="y-axis-sub">(% ทุนประกันภัย)</span></div>
-                
-                                <div style="flex: 1;">
-                    <div class="chart-bar-container">
-                        <div class="chart-bar">
-                            <div class="bar-txt-pct">100%</div>
-                            <div class="bar-txt-amt">คุ้มครอง <span id="mat-cov-val">200,000</span></div>
-                        </div>
-                    </div>
+            <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 10px;">
+                <div style="display: flex; align-items: flex-end; min-width: 600px;">
+                                    <div class="y-axis-label">ความคุ้มครองชีวิต<br><span class="y-axis-sub">(% ทุนประกันภัย)</span></div>
                     
-                                        <div class="x-axis-line">
-                        <div class="x-node node-start">1</div>
-                        <div class="x-node node-mid">20</div>
-                        <div class="x-node node-end">90</div>
-                    </div>
-                    <div class="x-labels">
-                        <div class="x-lbl lbl-start">ปีกรมธรรม์</div>
-                        <div class="x-lbl lbl-mid">ชำระเบี้ยครบ</div>
-                        <div class="x-lbl lbl-end">อายุ 90 ปี<br>(ครบสัญญา)</div>
+                                    <div style="flex: 1;">
+                        <div class="chart-bar-container">
+                            <div class="chart-bar">
+                                <div class="bar-txt-pct">100%</div>
+                                <div class="bar-txt-amt">คุ้มครอง <span id="mat-cov-val">200,000</span></div>
+                            </div>
+                        </div>
                         
-                        <div class="premium-period"><span>ระยะเวลาชำระเบี้ย 20 ปี</span></div>
+                                            <div class="x-axis-line">
+                            <div class="x-node node-start">1</div>
+                            <div class="x-node node-mid">20</div>
+                            <div class="x-node node-end">90</div>
+                        </div>
+                        <div class="x-labels">
+                            <div class="x-lbl lbl-start">ปีกรมธรรม์</div>
+                            <div class="x-lbl lbl-mid">ชำระเบี้ยครบ</div>
+                            <div class="x-lbl lbl-end">อายุ 90 ปี<br>(ครบสัญญา)</div>
+                            
+                            <div class="premium-period"><span>ระยะเวลาชำระเบี้ย 20 ปี</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
